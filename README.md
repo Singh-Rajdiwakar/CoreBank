@@ -261,3 +261,5 @@ Set variables:
 - RBI: Customer protection and liability in unauthorized electronic banking transactions (July 6, 2017 circular): `https://rbi.org.in/Scripts/NotificationUser.aspx?Id=11040&Mode=0`
 - Mastercard: Dispute management lifecycle concepts and stages: `https://www.mastercard.us/en-us/business/issuers/get-support/resolve-disputes.html`
 - Visa: Dispute framework resources and operations guide catalog: `https://visa-resources.manager.e.visa.com/latest-dispute-management-guides`
+#   C o r e B a n k  
+ 
