@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  flyway:
+    enabled: false
+
+app:
+  security:
+    jwt:
+      issuer: test
+      access-token-expiry-minutes: 15
+      refresh-token-expiry-days: 7
+      secret: test-secret-key-test-secret-key-test-secret-key-test-secret
+    password:
+      expiry-days: 90
+      max-failed-attempts: 5
+    otp:
+      expiry-minutes: 5
+  limits:
+    transfer-daily-limit: 500000.00
+    transfer-monthly-limit: 3000000.00
+    high-value-transfer-threshold: 100000.00
+    maker-checker-threshold: 250000.00
+    overdraft-default-limit: 20000.00
+    savings-minimum-balance: 5000.00
+    beneficiary-cooling-period-hours: 24
+    auto-block-fraud-score: 85
+  fees:
+    internal-transfer-fee: 2.50
+    external-transfer-fee: 7.50
+    atm-withdrawal-fee: 20.00
+    min-balance-penalty: 250.00
+    emi-late-penalty-percent: 2.5
+    fd-premature-withdrawal-penalty-percent: 1.0

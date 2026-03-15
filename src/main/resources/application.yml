@@ -1,0 +1,101 @@
+spring:
+  application:
+    name: banking-system-simulation
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/banking_sim?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  cache:
+    type: simple
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+app:
+  security:
+    jwt:
+      issuer: banking-system-simulation
+      access-token-expiry-minutes: 15
+      refresh-token-expiry-days: 7
+      secret: ${JWT_SECRET:change-this-to-a-very-long-random-secret-key-for-jwt-signing-256-bits-minimum}
+    password:
+      expiry-days: 90
+      max-failed-attempts: 5
+    otp:
+      expiry-minutes: 5
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
+  limits:
+    login-requests-per-minute: 10
+    transfer-requests-per-minute: 20
+    transfer-per-transaction-limit: 1000000.00
+    transfer-daily-limit: 500000.00
+    transfer-monthly-limit: 3000000.00
+    max-atm-withdrawal-per-day: 50000.00
+    beneficiary-cooling-period-hours: 24
+    high-value-transfer-threshold: 100000.00
+    maker-checker-threshold: 250000.00
+    overdraft-default-limit: 20000.00
+    savings-minimum-balance: 5000.00
+    dormancy-months: 12
+    auto-block-fraud-score: 85
+  fees:
+    internal-transfer-fee: 2.50
+    external-transfer-fee: 7.50
+    atm-withdrawal-fee: 20.00
+    min-balance-penalty: 250.00
+    emi-late-penalty-percent: 2.5
+    fd-premature-withdrawal-penalty-percent: 1.0
+  notifications:
+    email-enabled: true
+    sms-enabled: true
+    max-retries: 3
+    retry-delay-seconds: 30
+    retry-batch-size: 100
+    email-failure-rate-percent: 0
+    sms-failure-rate-percent: 0
+    template-default-language: EN
+    retention-days: 180
+  disputes:
+    raise-window-days: 180
+    zero-liability-days: 3
+    limited-liability-days: 7
+    provisional-credit-days: 10
+    resolution-sla-days: 90
+    overdue-escalation-batch-size: 200
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    com.bankingsim.banking: DEBUG

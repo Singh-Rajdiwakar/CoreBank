@@ -1,0 +1,347 @@
+{
+  "info": {
+    "name": "Banking System Simulation",
+    "_postman_id": "dbf57c3a-0f10-4f6e-8b2c-efabfca9e8a0",
+    "description": "Postman collection for enterprise banking simulation backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usernameOrEmail\": \"admin\",\n  \"password\": \"password\",\n  \"deviceInfo\": \"Postman\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Customer - Profile",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/customers/me"
+      }
+    },
+    {
+      "name": "Accounts - List",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/accounts"
+      }
+    },
+    {
+      "name": "Beneficiary - Add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/beneficiaries",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"beneficiaryType\": \"INTERNAL\",\n  \"nickname\": \"Savings2\",\n  \"name\": \"Self Secondary\",\n  \"accountNumber\": \"42000000000002\",\n  \"ifscCode\": \"BANK0001234\",\n  \"bankName\": \"Bank Sim\",\n  \"dailyLimit\": 50000\n}"
+        }
+      }
+    },
+    {
+      "name": "Transfer - Internal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "txn-001"}
+        ],
+        "url": "{{baseUrl}}/api/transfers/internal",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceAccountNumber\": \"42000000000001\",\n  \"destinationAccountNumber\": \"42000000000002\",\n  \"amount\": 1000,\n  \"remarks\": \"Sample transfer\",\n  \"transactionPin\": \"1234\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Transfer - Recurring",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "txn-rec-001"}
+        ],
+        "url": "{{baseUrl}}/api/transfers/recurring",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceAccountNumber\": \"42000000000001\",\n  \"destinationAccountNumber\": \"42000000000002\",\n  \"amount\": 1000,\n  \"transferMode\": \"INTERNAL\",\n  \"startAt\": \"2030-01-10T10:00:00\",\n  \"occurrences\": 3,\n  \"frequencyDays\": 30,\n  \"transactionPin\": \"1234\",\n  \"remarks\": \"Monthly recurring transfer\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Transfer - Bulk File Simulation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "txn-bulk-001"}
+        ],
+        "url": "{{baseUrl}}/api/transfers/bulk-file",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceAccountNumber\": \"42000000000001\",\n  \"transactionPin\": \"1234\",\n  \"remarks\": \"Payroll run\",\n  \"items\": [\n    {\n      \"destinationAccountNumber\": \"42000000000002\",\n      \"amount\": 15000,\n      \"remarks\": \"Salary credit\"\n    },\n    {\n      \"destinationAccountNumber\": \"42000000000003\",\n      \"amount\": 15000,\n      \"remarks\": \"Salary credit\"\n    }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "Cards - Transaction History",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/cards/XXXX-XXXX-XXXX-1234/transactions?limit=20"
+      }
+    },
+    {
+      "name": "Notifications - My Feed",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/me?page=0&size=50"
+      }
+    },
+    {
+      "name": "Notifications - Mark Read",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/1/read"
+      }
+    },
+    {
+      "name": "Notifications - Mark All Read",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/me/read-all"
+      }
+    },
+    {
+      "name": "Notifications - Unread Count",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/unread-count"
+      }
+    },
+    {
+      "name": "Notifications - Preferences",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/preferences"
+      }
+    },
+    {
+      "name": "Notifications - Update Preferences",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/notifications/preferences",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionInAppEnabled\": true,\n  \"transactionEmailEnabled\": true,\n  \"transactionSmsEnabled\": true,\n  \"securityInAppEnabled\": true,\n  \"securityEmailEnabled\": true,\n  \"securitySmsEnabled\": true,\n  \"languageCode\": \"HI\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Notifications - Delivery Callback (Admin/Manager)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/notifications/callbacks/delivery",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"notificationId\": 1,\n  \"providerMessageId\": \"SMS-ACK-123\",\n  \"status\": \"DELIVERED\",\n  \"error\": null\n}"
+        }
+      }
+    },
+    {
+      "name": "Notifications - Retry Dispatch (Admin/Manager)",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/admin/retry-dispatch"
+      }
+    },
+    {
+      "name": "Notifications - Retry Dispatch SMS Only (Admin/Manager)",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/admin/retry-dispatch?channel=SMS"
+      }
+    },
+    {
+      "name": "Notifications - Queue Summary (Admin/Manager/Auditor)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/admin/summary"
+      }
+    },
+    {
+      "name": "Notifications - Queue By Status (Admin/Manager/Auditor)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/admin/queue?status=PENDING&page=0&size=20"
+      }
+    },
+    {
+      "name": "Notifications - Cleanup Sent (Admin)",
+      "request": {
+        "method": "DELETE",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/admin/cleanup"
+      }
+    },
+    {
+      "name": "Notifications - Dead Letter Export CSV (Admin/Manager/Auditor)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/notifications/admin/dead-letter/export?channel=SMS&limit=1000"
+      }
+    },
+    {
+      "name": "Disputes - Raise Case (Customer)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/disputes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": 1,\n  \"category\": \"UNAUTHORIZED_TRANSACTION\",\n  \"reportedChannel\": \"MOBILE_APP\",\n  \"priority\": \"HIGH\",\n  \"description\": \"Unauthorized debit observed in account\",\n  \"evidenceReference\": \"screenshot://txn-1\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Disputes - My Cases (Customer)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/disputes/me?page=0&size=20"
+      }
+    },
+    {
+      "name": "Disputes - Ops Queue (Staff/Auditor)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/disputes/ops?status=OPEN&page=0&size=20"
+      }
+    },
+    {
+      "name": "Disputes - Upload Evidence",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/disputes/1/evidence",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fileName\": \"txn-screenshot.png\",\n  \"fileUrl\": \"storage://disputes/1/txn-screenshot.png\",\n  \"fileType\": \"image/png\",\n  \"checksum\": \"sha256:abc123\",\n  \"notes\": \"Screenshot from mobile app\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Disputes - Evidence List",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/disputes/1/evidence"
+      }
+    },
+    {
+      "name": "Disputes - Timeline",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/disputes/1/timeline?page=0&size=50"
+      }
+    },
+    {
+      "name": "Disputes - Assign (Manager/Admin)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/disputes/1/assign",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assigneeUserId\": 2\n}"
+        }
+      }
+    },
+    {
+      "name": "Disputes - Status Update (Employee/Manager/Admin)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/api/disputes/1/status",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"UNDER_REVIEW\",\n  \"resolutionSummary\": \"Initial validation completed\",\n  \"provisionalCreditRecommended\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "Disputes - Ops Summary",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/disputes/ops/summary"
+      }
+    },
+    {
+      "name": "Admin - Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/admin/reports/dashboard"
+      }
+    },
+    {
+      "name": "Admin - Reconciliation Report",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+        "url": "{{baseUrl}}/api/admin/reports/reconciliation?date=2026-03-10"
+      }
+    }
+  ],
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8080"},
+    {"key": "accessToken", "value": ""}
+  ]
+}
