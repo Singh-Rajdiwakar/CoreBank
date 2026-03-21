@@ -111,8 +111,8 @@ export default function CustomerTransactionHistoryPage() {
               <div className="mt-6 flex justify-center">
                 <Pagination
                   page={page}
-                  total={Math.ceil(transactions.length / 10)}
-                  onChange={setPage}
+                  totalPages={Math.ceil(transactions.length / 10)}
+                  onPageChange={setPage}
                 />
               </div>
             )}

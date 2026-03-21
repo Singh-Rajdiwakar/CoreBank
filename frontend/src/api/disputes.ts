@@ -97,3 +97,67 @@ export async function disputeTimeline(
   return res.data.data
 }
 
+export type DisputeStatusUpdateRequest = {
+  status: DisputeStatus
+  resolutionSummary?: string
+  provisionalCreditRecommended?: boolean
+}
+
+export async function updateDisputeStatus(
+  id: number,
+  req: DisputeStatusUpdateRequest,
+): Promise<DisputeResponse> {
+  const res = await http.patch<ApiResponse<DisputeResponse>>(`/disputes/${id}/status`, req)
+  return res.data.data
+}
+
+export type DisputeAssignRequest = {
+  assigneeUserId: number
+}
+
+export async function assignDispute(id: number, req: DisputeAssignRequest): Promise<DisputeResponse> {
+  const res = await http.patch<ApiResponse<DisputeResponse>>(`/disputes/${id}/assign`, req)
+  return res.data.data
+}
+
+export type DisputeEvidenceRequest = {
+  fileName: string
+  fileUrl: string
+  fileType: string
+  checksum?: string
+  notes?: string
+}
+
+export type DisputeEvidenceResponse = {
+  id: number
+  disputeId: number
+  fileName: string
+  fileUrl: string
+  fileType: string
+  checksum?: string
+  notes?: string
+  uploadedBy: number
+  uploadedAt: string
+  createdAt: string
+}
+
+export async function getDisputeEvidence(
+  id: number,
+): Promise<DisputeEvidenceResponse[]> {
+  const res = await http.get<ApiResponse<DisputeEvidenceResponse[]>>(
+    `/disputes/${id}/evidence`,
+  )
+  return res.data.data
+}
+
+export async function addDisputeEvidence(
+  id: number,
+  req: DisputeEvidenceRequest,
+): Promise<DisputeEvidenceResponse> {
+  const res = await http.post<ApiResponse<DisputeEvidenceResponse>>(
+    `/disputes/${id}/evidence`,
+    req,
+  )
+  return res.data.data
+}
+

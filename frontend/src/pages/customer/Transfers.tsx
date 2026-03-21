@@ -5,8 +5,8 @@ import toast from 'react-hot-toast'
 
 import { listMyAccounts } from '../../api/accounts'
 import { listBeneficiaries } from '../../api/beneficiaries'
-import type { SelfTransferRequest, InternalTransferRequest, BeneficiaryTransferRequest, ExternalTransferRequest } from '../../api/transfers'
-import { recentTransfers, selfTransfer, internalTransfer, beneficiaryTransfer, externalTransfer } from '../../api/transfers'
+import type { SelfTransferRequest, InternalTransferRequest, BeneficiaryTransferRequest, ExternalTransferRequest, ScheduledTransferRequest, RecurringTransferRequest } from '../../api/transfers'
+import { recentTransfers, selfTransfer, internalTransfer, beneficiaryTransfer, externalTransfer, scheduleTransfer, recurringTransfer } from '../../api/transfers'
 import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
@@ -14,7 +14,7 @@ import { Spinner } from '../../components/ui/Spinner'
 import { errorMessage } from '../../lib/errorMessage'
 import { formatCurrency, formatDateTime } from '../../lib/format'
 
-type TransferType = 'SELF' | 'INTERNAL' | 'BENEFICIARY' | 'EXTERNAL'
+type TransferType = 'SELF' | 'INTERNAL' | 'BENEFICIARY' | 'EXTERNAL' | 'SCHEDULED' | 'RECURRING'
 type ExternalMode = 'NEFT' | 'IMPS' | 'RTGS' | 'UPI'
 
 export default function CustomerTransfersPage() {
@@ -30,6 +30,14 @@ export default function CustomerTransfersPage() {
   const [transactionPin, setTransactionPin] = useState('')
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null)
   const [beneficiaryName, setBeneficiaryName] = useState('')
+
+  // Scheduled transfer state
+  const [scheduledFor, setScheduledFor] = useState('')
+
+  // Recurring transfer state
+  const [startAt, setStartAt] = useState('')
+  const [occurrences, setOccurrences] = useState('')
+  const [frequencyDays, setFrequencyDays] = useState('')
 
   const accountsQ = useQuery({
     queryKey: ['accounts', { page: 0, size: 50 }],
@@ -99,6 +107,55 @@ export default function CustomerTransfersPage() {
     onError: (e) => toast.error(errorMessage(e)),
   })
 
+  const scheduledM = useMutation({
+    mutationFn: async () => {
+      const idempotencyKey = uuidv4()
+      const req: ScheduledTransferRequest = {
+        sourceAccountNumber: sourceAccount,
+        destinationAccountNumber: destAccount,
+        amount: parseFloat(amount),
+        transferMode: 'SELF',
+        remarks,
+        transactionPin,
+        scheduledFor,
+      }
+      return scheduleTransfer(req, idempotencyKey)
+    },
+    onSuccess: (data) => {
+      toast.success(`Scheduled transfer created: ${data.referenceNumber}`)
+      resetForm()
+      setShowForm(false)
+      void recentQ.refetch()
+    },
+    onError: (e) => toast.error(errorMessage(e)),
+  })
+
+  const recurringM = useMutation({
+    mutationFn: async () => {
+      const idempotencyKey = uuidv4()
+      const req: RecurringTransferRequest = {
+        sourceAccountNumber: sourceAccount,
+        destinationAccountNumber: destAccount,
+        beneficiaryId: transferType === 'RECURRING' && beneficiaryId ? beneficiaryId : undefined,
+        amount: parseFloat(amount),
+        transferMode: 'SELF',
+        startAt,
+        occurrences: parseInt(occurrences),
+        frequencyDays: parseInt(frequencyDays),
+        remarks,
+        transactionPin,
+      }
+      return recurringTransfer(req, idempotencyKey)
+    },
+    onSuccess: (data) => {
+      toast.success(`Recurring transfer created: ${data[0]?.referenceNumber}`)
+      resetForm()
+      setShowForm(false)
+      void recentQ.refetch()
+    },
+    onError: (e) => toast.error(errorMessage(e)),
+  })
+
   const resetForm = () => {
     setSourceAccount('')
     setDestAccount('')
@@ -107,14 +164,21 @@ export default function CustomerTransfersPage() {
     setTransactionPin('')
     setBeneficiaryId(null)
     setBeneficiaryName('')
+    setScheduledFor('')
+    setStartAt('')
+    setOccurrences('')
+    setFrequencyDays('')
   }
 
   const accounts = accountsQ.data?.content ?? []
   const beneficiaries = beneficiariesQ.data?.content ?? []
   const recent = recentQ.data ?? []
 
-  const isValid = sourceAccount && amount && transactionPin &&
+  const isValid = sourceAccount && amount && transactionPin && (
+    transferType === 'SCHEDULED' ? (sourceAccount && destAccount && amount && transactionPin && scheduledFor) :
+    transferType === 'RECURRING' ? (sourceAccount && amount && transactionPin && startAt && occurrences && frequencyDays) :
     (transferType === 'SELF' || transferType === 'INTERNAL' || transferType === 'EXTERNAL' ? destAccount : beneficiaryId)
+  )
 
   return (
     <div className="space-y-6">
@@ -139,8 +203,8 @@ export default function CustomerTransfersPage() {
         </div>
       ) : (
         <div className="surface space-y-6 p-6">
-          <div className="flex gap-2">
-            {(['SELF', 'INTERNAL', 'BENEFICIARY', 'EXTERNAL'] as const).map((type) => (
+          <div className="flex flex-wrap gap-2">
+            {(['SELF', 'INTERNAL', 'BENEFICIARY', 'EXTERNAL', 'SCHEDULED', 'RECURRING'] as const).map((type) => (
               <button
                 key={type}
                 type="button"
@@ -249,6 +313,48 @@ export default function CustomerTransfersPage() {
               </div>
             )}
 
+            {transferType === 'SCHEDULED' && (
+              <div>
+                <label className="text-sm font-semibold">Schedule For (Date) *</label>
+                <Input
+                  type="date"
+                  value={scheduledFor}
+                  onChange={(e) => setScheduledFor(e.target.value)}
+                />
+              </div>
+            )}
+
+            {transferType === 'RECURRING' && (
+              <>
+                <div>
+                  <label className="text-sm font-semibold">Start At (Date) *</label>
+                  <Input
+                    type="date"
+                    value={startAt}
+                    onChange={(e) => setStartAt(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold">Frequency (Days) *</label>
+                  <Input
+                    type="number"
+                    placeholder="e.g., 30 for monthly"
+                    value={frequencyDays}
+                    onChange={(e) => setFrequencyDays(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold">Number of Occurrences *</label>
+                  <Input
+                    type="number"
+                    placeholder="e.g., 12 for 12 transfers"
+                    value={occurrences}
+                    onChange={(e) => setOccurrences(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
+
             <div className="md:col-span-2">
               <label className="text-sm font-semibold">Remarks</label>
               <Input
@@ -272,10 +378,24 @@ export default function CustomerTransfersPage() {
 
           <div className="flex gap-2">
             <Button
-              disabled={!isValid || transferM.isPending}
-              onClick={() => transferM.mutate()}
+              disabled={!isValid || transferM.isPending || scheduledM.isPending || recurringM.isPending}
+              onClick={() => {
+                if (transferType === 'SCHEDULED') {
+                  scheduledM.mutate()
+                } else if (transferType === 'RECURRING') {
+                  recurringM.mutate()
+                } else {
+                  transferM.mutate()
+                }
+              }}
             >
-              {transferM.isPending ? <Spinner className="h-4 w-4" /> : 'Initiate Transfer'}
+              {(transferM.isPending || scheduledM.isPending || recurringM.isPending) ? (
+                <Spinner className="h-4 w-4" />
+              ) : (
+                transferType === 'SCHEDULED' ? 'Schedule Transfer' :
+                transferType === 'RECURRING' ? 'Create Recurring Transfer' :
+                'Initiate Transfer'
+              )}
             </Button>
             <button
               type="button"

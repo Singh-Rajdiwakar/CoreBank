@@ -98,29 +98,116 @@ export async function approveTransfer(id: number, remark: string): Promise<Trans
   return res.data.data
 }
 
-export async function rejectTransfer(id: number, remark: string): Promise<TransactionResponse> {
+export async function rejectTransfer(id: number, remarks: string): Promise<TransactionResponse> {
   const res = await http.patch<ApiResponse<TransactionResponse>>(`/transfers/${id}/reject`, {
-    remark,
-  } satisfies RemarkRequest)
+    remarks,
+  })
   return res.data.data
 }
 
 export async function cancelTransfer(id: number): Promise<TransactionResponse> {
-  const res = await http.patch<ApiResponse<TransactionResponse>>(`/transfers/${id}/cancel`)
+  const res = await http.patch<ApiResponse<TransactionResponse>>(`/transfers/${id}/cancel`, {})
   return res.data.data
 }
 
-export async function transferReceipt(id: number): Promise<TransactionResponse> {
+export async function reverseTransfer(reference: string, remarks: string): Promise<TransactionResponse> {
+  const res = await http.patch<ApiResponse<TransactionResponse>>(`/transfers/${reference}/reverse`, {
+    remarks,
+  })
+  return res.data.data
+}
+
+export async function getTransferReceipt(id: number): Promise<TransactionResponse> {
   const res = await http.get<ApiResponse<TransactionResponse>>(`/transfers/${id}/receipt`)
   return res.data.data
 }
 
-export async function reverseTransfer(
-  reference: string,
-  remark: string,
+export type ScheduledTransferRequest = SelfTransferRequest & {
+  scheduledFor: string
+}
+
+export async function scheduleTransfer(
+  req: ScheduledTransferRequest,
+  idempotencyKey: string
 ): Promise<TransactionResponse> {
-  const res = await http.patch<ApiResponse<TransactionResponse>>(`/transfers/${reference}/reverse`, {
-    remark,
-  } satisfies RemarkRequest)
+  const res = await http.post<ApiResponse<TransactionResponse>>('/transfers/scheduled', req, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
+  return res.data.data
+}
+
+export type RecurringTransferRequest = {
+  sourceAccountNumber: string
+  destinationAccountNumber: string
+  beneficiaryId?: number
+  amount: number
+  transferMode: string
+  startAt: string
+  occurrences: number
+  frequencyDays: number
+  remarks: string
+  transactionPin: string
+  otp?: string
+}
+
+export async function recurringTransfer(
+  req: RecurringTransferRequest,
+  idempotencyKey: string
+): Promise<TransactionResponse[]> {
+  const res = await http.post<ApiResponse<TransactionResponse[]>>('/transfers/recurring', req, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
+  return res.data.data
+}
+
+export type BulkTransferItem = {
+  destinationAccountNumber: string
+  amount: number
+  remarks: string
+}
+
+export type BulkTransferRequest = {
+  sourceAccountNumber: string
+  items: BulkTransferItem[]
+  transactionPin: string
+  otp?: string
+  remarks?: string
+}
+
+export type BulkTransferResponse = {
+  batchReference: string
+  requestedCount: number
+  successCount: number
+  failedCount: number
+  totalRequestedAmount: number
+  totalSuccessfulAmount: number
+  items: {
+    itemIndex: number
+    destinationAccountNumber: string
+    amount: number
+    status: string
+    transactionId?: number
+    referenceNumber?: string
+    errorMessage?: string
+  }[]
+}
+
+export async function bulkTransfer(
+  req: BulkTransferRequest,
+  idempotencyKey: string
+): Promise<BulkTransferResponse> {
+  const res = await http.post<ApiResponse<BulkTransferResponse>>('/transfers/bulk-file', req, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
+  return res.data.data
+}
+
+export async function bulkSalaryTransfer(
+  req: BulkTransferRequest,
+  idempotencyKey: string
+): Promise<BulkTransferResponse> {
+  const res = await http.post<ApiResponse<BulkTransferResponse>>('/transfers/bulk-salary', req, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
   return res.data.data
 }

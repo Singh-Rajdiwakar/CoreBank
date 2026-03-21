@@ -1,10 +1,10 @@
-import { Bell, CreditCard, LayoutDashboard, LogOut, Send, Banknote, Download, Users, Landmark, Home, TrendingUp, History, AlertCircle, Settings, Lock } from 'lucide-react'
+import { Bell, CreditCard, LayoutDashboard, LogOut, Send, Banknote, Download, Users, Landmark, TrendingUp, History, AlertCircle, Settings, Lock } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 
 import { logout as logoutApi } from '../../api/auth'
 import { unreadCount } from '../../api/notifications'
-import { Badge } from '../../components/ui/Badge'
+
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../lib/cn'
 import { useAuthStore } from '../../store/auth'
@@ -219,6 +219,73 @@ export default function CustomerLayout() {
                 <Bell className="h-4 w-4" />
                 Notifications
               </span>
+            </NavLink>
+
+            <p className="px-3 py-2 text-xs font-semibold text-muted">MORE</p>
+
+            <NavLink
+              to="/app/statement"
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                  isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                )
+              }
+            >
+              <Download className="h-4 w-4" />
+              Statement
+            </NavLink>
+
+            <NavLink
+              to="/app/bulk-transfer"
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                  isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                )
+              }
+            >
+              <Send className="h-4 w-4" />
+              Bulk Transfer
+            </NavLink>
+
+            <NavLink
+              to="/app/documents"
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                  isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                )
+              }
+            >
+              <AlertCircle className="h-4 w-4" />
+              Documents
+            </NavLink>
+
+            <NavLink
+              to="/app/card-transactions"
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                  isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                )
+              }
+            >
+              <CreditCard className="h-4 w-4" />
+              Card Transactions
+            </NavLink>
+
+            <NavLink
+              to="/app/spending-overview"
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                  isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                )
+              }
+            >
+              <TrendingUp className="h-4 w-4" />
+              Spending Analysis
             </NavLink>
 
             <p className="px-3 py-2 text-xs font-semibold text-muted">SETTINGS</p>

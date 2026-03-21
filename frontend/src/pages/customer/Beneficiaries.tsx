@@ -16,7 +16,6 @@ export default function CustomerBeneficiariesPage() {
   const [accountHolderName, setAccountHolderName] = useState('')
   const [bankName, setBankName] = useState('')
   const [ifscCode, setIfscCode] = useState('')
-  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const listQ = useQuery({
     queryKey: ['beneficiaries'],

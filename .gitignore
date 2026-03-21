@@ -7,6 +7,13 @@ build/
 out/
 
 # ======================
+# Documentation files
+# ======================
+*.md
+README.md
+*.pdf
+
+# ======================
 # Logs
 # ======================
 *.log
@@ -37,17 +44,40 @@ Thumbs.db
 # Maven
 # ======================
 .mvn/wrapper/maven-wrapper.jar
+.classpath
+.project
+.settings/
+*.class
+*.jar
+!pom.xml
+
+# ======================
+# Test & Coverage Reports
+# ======================
+coverage/
+.nyc_output/
+.jacoco*
+surefire-reports/
+test-results/
 
 # ======================
 # Docker
 # ======================
 docker-compose.override.yml
+.docker/
 
 # ======================
 # Node (if frontend added later)
 # ======================
 node_modules/
 dist/
+.next/
+out/
+build/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnpm-debug.log
 
 # ======================
 # Temporary files
@@ -55,6 +85,11 @@ dist/
 *.tmp
 *.temp
 *.swp
+*.swo
+*~
+.cache/
+.parcel-cache/
+.eslintcache
 
 # ======================
 # Secrets
@@ -65,4 +100,8 @@ dist/
 
 
 
+# ======================
+# Postman
+# ======================
 postman/*.postman_environment.json
+postman/*.postman_globals.json

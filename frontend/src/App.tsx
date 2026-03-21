@@ -23,6 +23,11 @@ import CustomerFDPage from './pages/customer/FD'
 import CustomerRDPage from './pages/customer/RD'
 import CustomerTransactionHistoryPage from './pages/customer/TransactionHistory'
 import CustomerDisputesPage from './pages/customer/Disputes'
+import AccountStatementPage from './pages/customer/AccountStatement'
+import BulkTransferPage from './pages/customer/BulkTransfer'
+import DocumentsPage from './pages/customer/Documents'
+import CardTransactionsPage from './pages/customer/CardTransactions'
+import SpendingOverviewPage from './pages/customer/SpendingOverview'
 import OpsLayout from './pages/ops/OpsLayout'
 import OpsDashboardPage from './pages/ops/Dashboard'
 import OpsApprovalsTransfersPage from './pages/ops/ApprovalsTransfers'
@@ -34,6 +39,9 @@ import OpsNotificationsAdminPage from './pages/ops/NotificationsAdmin'
 import OpsDisputesPage from './pages/ops/Disputes'
 import OpsCustomersPage from './pages/ops/Customers'
 import OpsMonitoringPage from './pages/ops/Monitoring'
+import OpenAccountForm from './pages/ops/OpenAccountForm'
+import EmployeesPage from './pages/ops/Employees'
+import AdminConfigPage from './pages/ops/AdminConfig'
 
 export default function App() {
   return (
@@ -67,6 +75,11 @@ export default function App() {
         <Route path="profile" element={<CustomerProfilePage />} />
         <Route path="transaction-pin" element={<CustomerTransactionPinPage />} />
         <Route path="notifications" element={<CustomerNotificationsPage />} />
+        <Route path="statement" element={<AccountStatementPage />} />
+        <Route path="bulk-transfer" element={<BulkTransferPage />} />
+        <Route path="documents" element={<DocumentsPage />} />
+        <Route path="card-transactions" element={<CardTransactionsPage />} />
+        <Route path="spending-overview" element={<SpendingOverviewPage />} />
       </Route>
 
       <Route
@@ -120,6 +133,15 @@ export default function App() {
         />
 
         <Route
+          path="accounts/open"
+          element={
+            <RequireRole anyOf={['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_EMPLOYEE']}>
+              <OpenAccountForm />
+            </RequireRole>
+          }
+        />
+
+        <Route
           path="audit"
           element={
             <RequireRole anyOf={['ROLE_ADMIN', 'ROLE_AUDITOR']}>
@@ -160,6 +182,24 @@ export default function App() {
           element={
             <RequireRole anyOf={['ROLE_ADMIN']}>
               <OpsMonitoringPage />
+            </RequireRole>
+          }
+        />
+
+        <Route
+          path="employees"
+          element={
+            <RequireRole anyOf={['ROLE_ADMIN']}>
+              <EmployeesPage />
+            </RequireRole>
+          }
+        />
+
+        <Route
+          path="config"
+          element={
+            <RequireRole anyOf={['ROLE_ADMIN']}>
+              <AdminConfigPage />
             </RequireRole>
           }
         />

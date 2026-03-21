@@ -48,21 +48,27 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <p className="text-xs font-semibold text-muted">KYC Status</p>
-              <Badge tone={profile.kycStatus === 'VERIFIED' ? 'success' : 'warning'} className="mt-1">
-                {profile.kycStatus}
-              </Badge>
+              <div className="mt-1">
+                <Badge tone={profile.kycStatus === 'VERIFIED' ? 'success' : 'warning'}>
+                  {profile.kycStatus}
+                </Badge>
+              </div>
             </div>
             <div>
               <p className="text-xs font-semibold text-muted">Risk Profile</p>
-              <Badge tone={profile.riskProfile === 'LOW' ? 'success' : profile.riskProfile === 'MEDIUM' ? 'warning' : 'danger'} className="mt-1">
-                {profile.riskProfile}
-              </Badge>
+              <div className="mt-1">
+                <Badge tone={profile.riskProfile === 'LOW' ? 'success' : profile.riskProfile === 'MEDIUM' ? 'warning' : 'danger'}>
+                  {profile.riskProfile}
+                </Badge>
+              </div>
             </div>
             <div>
               <p className="text-xs font-semibold text-muted">Account Status</p>
-              <Badge tone={profile.status === 'ACTIVE' ? 'success' : 'warning'} className="mt-1">
-                {profile.status}
-              </Badge>
+              <div className="mt-1">
+                <Badge tone={profile.status === 'ACTIVE' ? 'success' : 'warning'}>
+                  {profile.status}
+                </Badge>
+              </div>
             </div>
             <div>
               <p className="text-xs font-semibold text-muted">Address</p>

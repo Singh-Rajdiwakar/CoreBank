@@ -5,6 +5,7 @@ import {
   GitPullRequest,
   LayoutDashboard,
   LogOut,
+  Plus,
   Scale,
   Shield,
   ShieldAlert,
@@ -120,6 +121,21 @@ export default function OpsLayout() {
               </NavLink>
             )}
 
+            {(isAdmin || isManager || isEmployee) && (
+              <NavLink
+                to="/ops/accounts/open"
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                    isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                  )
+                }
+              >
+                <Plus className="h-4 w-4" />
+                Open Account
+              </NavLink>
+            )}
+
             {(isAdmin || isAuditor) && (
               <NavLink
                 to="/ops/audit"
@@ -192,6 +208,36 @@ export default function OpsLayout() {
               >
                 <Activity className="h-4 w-4" />
                 Monitoring
+              </NavLink>
+            )}
+
+            {isAdmin && (
+              <NavLink
+                to="/ops/employees"
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                    isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                  )
+                }
+              >
+                <Users className="h-4 w-4" />
+                Employees
+              </NavLink>
+            )}
+
+            {isAdmin && (
+              <NavLink
+                to="/ops/config"
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold',
+                    isActive ? 'bg-primary text-white' : 'hover:bg-black/5',
+                  )
+                }
+              >
+                <Shield className="h-4 w-4" />
+                Configuration
               </NavLink>
             )}
 

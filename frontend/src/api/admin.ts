@@ -138,3 +138,25 @@ export async function monitoring(): Promise<Record<string, unknown>> {
   return res.data.data
 }
 
+export async function unlockUser(userId: number): Promise<string> {
+  const res = await http.patch<ApiResponse<string>>(`/admin/users/${userId}/unlock`, {})
+  return res.data.data
+}
+
+export async function loanPortfolioReport(): Promise<Record<string, unknown>> {
+  const res = await http.get<ApiResponse<Record<string, unknown>>>('/admin/reports/loan-portfolio')
+  return res.data.data
+}
+
+export async function npaSummaryReport(): Promise<Record<string, unknown>> {
+  const res = await http.get<ApiResponse<Record<string, unknown>>>('/admin/reports/npa-summary')
+  return res.data.data
+}
+
+export async function reconciliationReport(date?: string): Promise<Record<string, unknown>> {
+  const res = await http.get<ApiResponse<Record<string, unknown>>>('/admin/reports/reconciliation', {
+    params: { date },
+  })
+  return res.data.data
+}
+

@@ -54,11 +54,7 @@ export default function CustomerLoansPage() {
   const payEmiM = useMutation({
     mutationFn: async () => {
       if (!selectedLoanId) return
-      return payEmi({
-        loanId: selectedLoanId,
-        amount: parseFloat(emiAmount),
-        transactionPin,
-      })
+      return payEmi(selectedLoanId, parseFloat(emiAmount))
     },
     onSuccess: () => {
       toast.success('EMI payment successful')

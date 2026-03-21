@@ -10,12 +10,8 @@ import { Input } from '../../components/ui/Input'
 import { Spinner } from '../../components/ui/Spinner'
 import { errorMessage } from '../../lib/errorMessage'
 
-type CardType = 'DEBIT' | 'CREDIT' | 'PREPAID'
-
 export default function CustomerCardsPage() {
   const [showRequestForm, setShowRequestForm] = useState(false)
-  const [selectedCardId, setSelectedCardId] = useState<number | null>(null)
-  const [cardType, setCardType] = useState<CardType>('DEBIT')
   const [accountNumber, setAccountNumber] = useState('')
   const [showPinForm, setShowPinForm] = useState<number | null>(null)
   const [newPin, setNewPin] = useState('')
@@ -33,7 +29,7 @@ export default function CustomerCardsPage() {
 
   const requestM = useMutation({
     mutationFn: async () => {
-      return requestCard({ accountNumber, cardType })
+      return requestCard(accountNumber)
     },
     onSuccess: () => {
       toast.success('Card request submitted')
@@ -116,35 +112,22 @@ export default function CustomerCardsPage() {
         </div>
       ) : (
         <div className="surface space-y-4 p-6">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-sm font-semibold">Card Type *</label>
-              <select
-                className="mt-1 w-full rounded border border-black/10 px-3 py-2 text-sm"
-                value={cardType}
-                onChange={(e) => setCardType(e.target.value as CardType)}
-              >
-                <option value="DEBIT">Debit Card</option>
-                <option value="CREDIT">Credit Card</option>
-                <option value="PREPAID">Prepaid Card</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-sm font-semibold">Account *</label>
-              <select
-                className="mt-1 w-full rounded border border-black/10 px-3 py-2 text-sm"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
-              >
-                <option value="">Select account</option>
-                {accounts.map((a) => (
-                  <option key={a.accountNumber} value={a.accountNumber}>
-                    {a.accountNumber}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <label className="text-sm font-semibold">Account *</label>
+            <select
+              id="account-select"
+              className="mt-1 w-full rounded border border-black/10 px-3 py-2 text-sm"
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
+              aria-label="Select Account"
+            >
+              <option value="">Select account</option>
+              {accounts.map((a) => (
+                <option key={a.accountNumber} value={a.accountNumber}>
+                  {a.accountNumber}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex gap-2">
