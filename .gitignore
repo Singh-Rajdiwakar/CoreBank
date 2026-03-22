@@ -92,6 +92,24 @@ pnpm-lock.yaml
 .eslintcache
 *.psp
 *.pdf
+*.ps1
+
+# ======================
+# Test & Report files
+# ======================
+ENDPOINT_DATABASE.csv
+QA_TEST_REPORT.json
+*TEST*.json
+*TEST*.csv
+*test-report*.json
+*test-report*.csv
+
+# ======================
+# Keep important JSON/CSV files
+# ======================
+!frontend/package.json
+!frontend/package-lock.json
+!postman/*.json
 
 # ======================
 # Secrets
