@@ -142,7 +142,10 @@ public class CardService {
     }
 
     public List<CardResponse> listByAccount(String accountNumber) {
-        Account account = accountService.getEntityByNumber(accountNumber);
+        Account account = accountService.findByAccountNumberOrNull(accountNumber);
+        if (account == null) {
+            return java.util.Collections.emptyList();
+        }
         enforceAccountAccess(account);
         return cardRepository.findByAccountId(account.getId()).stream().map(CardMapper::toResponse).toList();
     }

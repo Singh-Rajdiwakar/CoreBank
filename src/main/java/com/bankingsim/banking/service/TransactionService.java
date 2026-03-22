@@ -470,6 +470,9 @@ public class TransactionService {
 
     public List<TransactionResponse> myRecentTransactions() {
         Long userId = SecurityUtils.currentUserId();
+        if (userId == null) {
+            return java.util.Collections.emptyList();
+        }
         return transactionRepository.findTop20ByInitiatedByOrderByInitiatedAtDesc(userId).stream()
                 .map(TransactionMapper::toResponse)
                 .toList();

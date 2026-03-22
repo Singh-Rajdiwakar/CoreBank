@@ -1,0 +1,154 @@
+# API Endpoint Database - CSV Format
+
+## Copy this into Excel/Google Sheets for quick reference
+
+```csv
+Endpoint ID,Endpoint Path,HTTP Method,Auth Role,Subsystem,Frontend Service,Frontend Implemented,Response Format,Status,Priority,Notes
+1,/api/auth/register,POST,PUBLIC,Auth,authAPI,YES,ApiResponse,OK,CRITICAL,Core signup
+2,/api/auth/login,POST,PUBLIC,Auth,authAPI,YES,ApiResponse,OK,CRITICAL,Core login
+3,/api/auth/refresh,POST,PUBLIC,Auth,authAPI,YES,ApiResponse,OK,CRITICAL,Token refresh
+4,/api/auth/logout,POST,AUTHENTICATED,Auth,authAPI,YES,ApiResponse,OK,CRITICAL,Session logout
+5,/api/auth/change-password,POST,AUTHENTICATED,Auth,authAPI,YES,ApiResponse,OK,CRITICAL,Password change
+6,/api/auth/forgot-password,POST,PUBLIC,Auth,authAPI,NO,ApiResponse,MISSING,HIGH,Password reset flow
+7,/api/auth/reset-password,POST,PUBLIC,Auth,authAPI,NO,ApiResponse,MISSING,HIGH,Complete password reset
+8,/api/auth/otp/generate,POST,PUBLIC,Auth,authAPI,NO,ApiResponse,MISSING,HIGH,OTP generation for security
+9,/api/auth/otp/verify,POST,PUBLIC,Auth,authAPI,NO,ApiResponse,MISSING,HIGH,OTP verification
+10,/api/accounts,POST,EMPLOYEE+,Account,accountAPI,NO,ApiResponse,MISSING,HIGH,Create new account
+11,/api/accounts,GET,CUSTOMER+,Account,accountAPI,YES,PageResponse,OK,CRITICAL,List accounts
+12,/api/accounts/{accountNumber},GET,CUSTOMER+,Account,accountAPI,YES,ApiResponse,OK,CRITICAL,View single account
+13,/api/accounts/{accountNumber}/balance,GET,CUSTOMER+,Account,accountAPI,YES,Map,INCONSISTENT,MEDIUM,Returns Map not ApiResponse
+14,/api/accounts/{accountNumber}/statement,GET,CUSTOMER+,Account,accountAPI,YES,PageResponse,OK,CRITICAL,Full statement with pagination
+15,/api/accounts/{accountNumber}/mini-statement,GET,CUSTOMER+,Account,accountAPI,YES,List,INCONSISTENT,MEDIUM,Returns List not ApiResponse
+16,/api/accounts/{accountNumber}/passbook,GET,CUSTOMER+,Account,accountAPI,YES,PageResponse,OK,CRITICAL,Passbook view
+17,/api/accounts/{id}/approve,PATCH,EMPLOYEE+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Account approval workflow
+18,/api/accounts/{id}/freeze,PATCH,EMPLOYEE+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Freeze account
+19,/api/accounts/{id}/unfreeze,PATCH,EMPLOYEE+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Unfreeze account
+20,/api/accounts/{id}/block,PATCH,MANAGER+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Block account
+21,/api/accounts/{id}/unblock,PATCH,MANAGER+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Unblock account
+22,/api/accounts/{id}/close,PATCH,MANAGER+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Close account
+23,/api/accounts/{id}/reactivate,PATCH,EMPLOYEE+,Account,accountAPI,NO,ApiResponse,MISSING,MEDIUM,Reactivate account
+24,/api/transfers/self,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,Self account transfer
+25,/api/transfers/internal,POST,CUSTOMER+,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,Internal transfer
+26,/api/transfers/beneficiary,POST,CUSTOMER,Transfer,transferAPI,NO,ApiResponse,MISSING,HIGH,Transfer to beneficiary
+27,/api/transfers/external,POST,CUSTOMER,Transfer,transferAPI,NO,ApiResponse,MISSING,HIGH,External transfer
+28,/api/transfers/neft,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,NEFT transfer
+29,/api/transfers/imps,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,IMPS transfer
+30,/api/transfers/rtgs,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,RTGS transfer
+31,/api/transfers/upi,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,UPI transfer
+32,/api/transfers/scheduled,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,MEDIUM,Scheduled/Future transfer
+33,/api/transfers/recurring,POST,CUSTOMER,Transfer,transferAPI,YES,ApiResponse,OK,MEDIUM,Recurring transfer setup
+34,/api/transfers/bulk-salary,POST,MANAGER+,Transfer,transferAPI,NO,ApiResponse,MISSING,MEDIUM,Salary bulk transfer
+35,/api/transfers/bulk-file,POST,MANAGER+,Transfer,transferAPI,NO,ApiResponse,MISSING,MEDIUM,File-based bulk transfer
+36,/api/transfers/{id}/cancel,PATCH,CUSTOMER+,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,Cancel transfer
+37,/api/transfers/{id}/approve,PATCH,MANAGER+,Transfer,transferAPI,PARTIAL,ApiResponse,BROKEN,CRITICAL,Manager approval - WRONG PATH
+38,/api/transfers/{id}/reject,PATCH,MANAGER+,Transfer,transferAPI,PARTIAL,ApiResponse,BROKEN,CRITICAL,Manager rejection - WRONG PATH
+39,/api/transfers/{reference}/reverse,PATCH,MANAGER+,Transfer,transferAPI,NO,ApiResponse,MISSING,MEDIUM,Reverse/refund transfer
+40,/api/transfers/{id}/receipt,GET,CUSTOMER+,Transfer,transferAPI,YES,ApiResponse,OK,CRITICAL,Get transfer receipt
+41,/api/transfers/recent,GET,CUSTOMER+,Transfer,transferAPI,YES,List,INCONSISTENT,CRITICAL,Returns List not ApiResponse
+42,/api/cards/request,POST,CUSTOMER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Request new card
+43,/api/cards,GET,CUSTOMER+,Card,cardAPI,YES,List,INCONSISTENT,CRITICAL,List cards - returns List
+44,/api/cards/{cardNumber}/transactions,GET,CUSTOMER+,Card,cardAPI,YES,List,INCONSISTENT,MEDIUM,Card transactions - returns List
+45,/api/cards/activate,PATCH,CUSTOMER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Activate card
+46,/api/cards/block,PATCH,CUSTOMER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Block card
+47,/api/cards/unblock,PATCH,MANAGER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Unblock card
+48,/api/cards/hotlist,PATCH,CUSTOMER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Hotlist card
+49,/api/cards/pin,PATCH,CUSTOMER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Set card PIN
+50,/api/cards/settings,PATCH,CUSTOMER+,Card,cardAPI,NO,ApiResponse,MISSING,MEDIUM,Card settings
+51,/api/cards/atm-withdraw,POST,CUSTOMER+,Card,cardAPI,YES,ApiResponse,OK,CRITICAL,ATM withdrawal
+52,/api/deposits,POST,CUSTOMER+,Deposit,depositAPI,YES,ApiResponse,OK,CRITICAL,Deposit cash/cheque
+53,/api/deposits/{reference}/clear,PATCH,EMPLOYEE+,Deposit,depositAPI,NO,ApiResponse,MISSING,MEDIUM,Clear cheque deposit
+54,/api/withdrawals,POST,CUSTOMER+,Deposit,depositAPI,YES,ApiResponse,OK,CRITICAL,Withdrawal request
+55,/api/loans,POST,CUSTOMER,Loan,loanAPI,YES,ApiResponse,OK,CRITICAL,Apply for loan
+56,/api/loans/me,GET,CUSTOMER,Loan,loanAPI,YES,List,INCONSISTENT,CRITICAL,My loans - returns List
+57,/api/loans/{id}/emi-schedule,GET,CUSTOMER+,Loan,loanAPI,YES,List,INCONSISTENT,MEDIUM,EMI schedule - returns List
+58,/api/loans/{id}/review,PATCH,EMPLOYEE+,Loan,loanAPI,NO,ApiResponse,MISSING,MEDIUM,Loan review by bank
+59,/api/loans/{id}/disburse,PATCH,MANAGER+,Loan,loanAPI,NO,ApiResponse,MISSING,MEDIUM,Disburse loan amount
+60,/api/loans/emi/pay,POST,CUSTOMER+,Loan,loanAPI,YES,ApiResponse,OK,CRITICAL,Pay EMI
+61,/api/loans/{id}/foreclose,PATCH,CUSTOMER+,Loan,loanAPI,NO,ApiResponse,MISSING,MEDIUM,Foreclose loan early
+62,/api/deposit-products/fd,POST,CUSTOMER,Deposit Product,depositAPI,YES,ApiResponse,OK,CRITICAL,Create Fixed Deposit
+63,/api/deposit-products/fd/me,GET,CUSTOMER,Deposit Product,depositAPI,YES,List,INCONSISTENT,MEDIUM,My FDs - returns List
+64,/api/deposit-products/fd/{fdNumber}/premature-withdraw,PATCH,CUSTOMER,Deposit Product,depositAPI,YES,ApiResponse,OK,MEDIUM,FD early withdrawal
+65,/api/deposit-products/rd,POST,CUSTOMER,Deposit Product,depositAPI,YES,ApiResponse,OK,CRITICAL,Create Recurring Deposit
+66,/api/deposit-products/rd/me,GET,CUSTOMER,Deposit Product,depositAPI,YES,List,INCONSISTENT,MEDIUM,My RDs - returns List
+67,/api/deposit-products/rd/{rdNumber}/installment,PATCH,CUSTOMER,Deposit Product,depositAPI,YES,ApiResponse,OK,CRITICAL,Pay RD installment
+68,/api/beneficiaries,POST,CUSTOMER,Beneficiary,beneficiaryAPI,YES,ApiResponse,OK,CRITICAL,Add beneficiary
+69,/api/beneficiaries,GET,CUSTOMER,Beneficiary,beneficiaryAPI,YES,List,INCONSISTENT,CRITICAL,List beneficiaries - returns List
+70,/api/beneficiaries/{id}/verify,POST,CUSTOMER,Beneficiary,beneficiaryAPI,YES,ApiResponse,OK,CRITICAL,Verify beneficiary
+71,/api/beneficiaries/{id},DELETE,CUSTOMER,Beneficiary,beneficiaryAPI,YES,ApiResponse,OK,CRITICAL,Delete beneficiary
+72,/api/disputes,POST,CUSTOMER,Dispute,disputeAPI,YES,ApiResponse,OK,CRITICAL,Raise dispute/complaint
+73,/api/disputes/me,GET,CUSTOMER,Dispute,disputeAPI,YES,PageResponse,OK,CRITICAL,My disputes
+74,/api/disputes/me/{id},GET,CUSTOMER,Dispute,disputeAPI,YES,ApiResponse,OK,CRITICAL,View dispute details
+75,/api/disputes/{id}/evidence,POST,CUSTOMER+,Dispute,disputeAPI,YES,ApiResponse,OK,CRITICAL,Upload evidence
+76,/api/disputes/{id}/evidence,GET,CUSTOMER+,Dispute,disputeAPI,YES,List,INCONSISTENT,MEDIUM,Get evidence - returns List
+77,/api/disputes/{id}/timeline,GET,CUSTOMER+,Dispute,disputeAPI,YES,PageResponse,OK,MEDIUM,Dispute timeline/history
+78,/api/disputes/ops,GET,EMPLOYEE+,Dispute,disputeAPI,NO,PageResponse,MISSING,MEDIUM,Staff dispute queue
+79,/api/disputes/ops/summary,GET,EMPLOYEE+,Dispute,disputeAPI,NO,ApiResponse,MISSING,MEDIUM,Dispute summary dashboard
+80,/api/disputes/{id}/assign,PATCH,MANAGER+,Dispute,disputeAPI,NO,ApiResponse,MISSING,MEDIUM,Assign dispute to staff
+81,/api/disputes/{id}/status,PATCH,EMPLOYEE+,Dispute,disputeAPI,NO,ApiResponse,MISSING,MEDIUM,Update dispute status
+82,/api/notifications/me,GET,AUTHENTICATED,Notification,notificationAPI,YES,PageResponse,OK,CRITICAL,Get my notifications
+83,/api/notifications/unread-count,GET,AUTHENTICATED,Notification,notificationAPI,YES,Map,INCONSISTENT,MEDIUM,Unread count - returns Map
+84,/api/notifications/{id}/read,PATCH,AUTHENTICATED,Notification,notificationAPI,YES,ApiResponse,OK,CRITICAL,Mark notification read
+85,/api/notifications/me/read-all,PATCH,AUTHENTICATED,Notification,notificationAPI,YES,Map,INCONSISTENT,MEDIUM,Mark all read - returns Map
+86,/api/notifications/preferences,GET,AUTHENTICATED,Notification,notificationAPI,YES,ApiResponse,OK,MEDIUM,Notification preferences
+87,/api/notifications/preferences,PATCH,AUTHENTICATED,Notification,notificationAPI,YES,ApiResponse,OK,MEDIUM,Update preferences
+88,/api/notifications/callbacks/delivery,PATCH,ADMIN+,Notification,notificationAPI,NO,ApiResponse,MISSING,LOW,Admin callback processing
+89,/api/notifications/admin/retry-dispatch,PATCH,ADMIN+,Notification,notificationAPI,NO,Map,MISSING,LOW,Admin retry dispatch
+90,/api/notifications/admin/summary,GET,ADMIN+,Notification,notificationAPI,NO,ApiResponse,MISSING,LOW,Admin queue summary
+91,/api/admin/config/fees,POST,ADMIN,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Fee configuration
+92,/api/admin/config/fees,GET,ADMIN+,Admin,adminAPI,NO,List,MISSING,LOW,List fee rules
+93,/api/admin/config/interests,POST,ADMIN,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Interest rate config
+94,/api/admin/config/interests,GET,ADMIN+,Admin,adminAPI,NO,List,MISSING,LOW,List interest rules
+95,/api/admin/config/system,POST,ADMIN,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,System configuration
+96,/api/admin/config/system,GET,ADMIN+,Admin,adminAPI,NO,Map,MISSING,LOW,Get system config
+97,/api/admin/customers/{id}/block,PATCH,ADMIN,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Block customer
+98,/api/admin/customers/{id}/unblock,PATCH,ADMIN,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Unblock customer
+99,/api/admin/users/{id}/unlock,PATCH,ADMIN,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Unlock user account
+100,/api/admin/monitoring,GET,ADMIN+,Admin,adminAPI,NO,Map,MISSING,LOW,Monitoring metrics
+101,/api/admin/reports/dashboard,GET,ADMIN+,Admin,adminAPI,PARTIAL,ApiResponse,BROKEN,HIGH,Dashboard - path broken
+102,/api/admin/reports/branch-performance,GET,ADMIN+,Admin,adminAPI,PARTIAL,List,BROKEN,MEDIUM,Branch report - path broken
+103,/api/admin/reports/high-value-transactions,GET,ADMIN+,Admin,adminAPI,PARTIAL,List,BROKEN,MEDIUM,High value txn report - path broken
+104,/api/admin/reports/loan-portfolio,GET,ADMIN+,Admin,adminAPI,PARTIAL,Map,BROKEN,MEDIUM,Loan portfolio - path broken
+105,/api/admin/reports/revenue,GET,ADMIN+,Admin,adminAPI,PARTIAL,Map,BROKEN,MEDIUM,Revenue report - path broken
+106,/api/admin/reports/daily-volume,GET,ADMIN+,Admin,adminAPI,PARTIAL,Map,BROKEN,MEDIUM,Daily volume - path broken
+107,/api/admin/reports/npa-summary,GET,ADMIN+,Admin,adminAPI,PARTIAL,Map,BROKEN,MEDIUM,NPA summary - path broken
+108,/api/admin/reports/reconciliation,GET,ADMIN+,Admin,adminAPI,PARTIAL,Map,BROKEN,MEDIUM,Reconciliation - path broken
+109,/api/admin/branches,POST,ADMIN+,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Create branch
+110,/api/admin/branches,GET,ADMIN+,adminAPI,NO,PageResponse,MISSING,LOW,List branches
+111,/api/admin/branches/{id},GET,ADMIN+,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Get branch details
+112,/api/admin/branches/{id},PUT,ADMIN+,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Update branch
+113,/api/admin/employees,POST,ADMIN+,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Create employee
+114,/api/admin/employees/{id}/status,PATCH,ADMIN+,Admin,adminAPI,NO,ApiResponse,MISSING,LOW,Update employee status
+115,/api/admin/branches/{branchId}/employees,GET,ADMIN+,Admin,adminAPI,NO,PageResponse,MISSING,LOW,List branch employees
+116,/api/fraud/cases,GET,EMPLOYEE+,Fraud,N/A,NO,List,MISSING,MEDIUM,List fraud cases
+117,/api/fraud/cases/{id}/review,PATCH,MANAGER+,Fraud,N/A,NO,ApiResponse,MISSING,MEDIUM,Review fraud case
+118,/api/audit/logs,GET,ADMIN+,Audit,auditAPI,YES,PageResponse,OK,CRITICAL,Audit logs
+119,/api/customers,POST,EMPLOYEE+,Customer,customerAPI,NO,ApiResponse,MISSING,MEDIUM,Create customer
+120,/api/customers,GET,EMPLOYEE+,Customer,customerAPI,YES,PageResponse,OK,MEDIUM,Search customers
+121,/api/customers/me,GET,CUSTOMER,Customer,customerAPI,YES,ApiResponse,OK,CRITICAL,My profile
+122,/api/customers/{id},GET,EMPLOYEE+,Customer,customerAPI,NO,ApiResponse,MISSING,MEDIUM,Get customer details
+123,/api/customers/{id},PUT,CUSTOMER+,Customer,customerAPI,YES,ApiResponse,OK,CRITICAL,Update profile
+124,/api/customers/{id}/documents,POST,CUSTOMER+,Customer,customerAPI,YES,ApiResponse,OK,CRITICAL,Upload document
+125,/api/customers/{id}/documents,GET,CUSTOMER+,Customer,customerAPI,YES,List,INCONSISTENT,MEDIUM,Get documents - returns List
+126,/api/customers/{id}/archive,PATCH,MANAGER+,Customer,customerAPI,NO,ApiResponse,MISSING,LOW,Archive customer
+127,/api/customers/me/transaction-pin,POST,CUSTOMER,Customer,customerAPI,YES,ApiResponse,OK,MEDIUM,Set transaction PIN
+128,/api/employee/customers/assigned,GET,EMPLOYEE+,Employee,N/A,NO,PageResponse,MISSING,MEDIUM,Assigned customers
+129,/api/employee/fraud/cases,GET,EMPLOYEE+,Employee,N/A,NO,List,MISSING,MEDIUM,Fraud cases for employee
+130,/api/manager/transfers/pending,GET,MANAGER+,Manager,transferAPI,YES,List,INCONSISTENT,CRITICAL,Pending transfers - returns List
+131,/api/reports/me/monthly-summary,GET,CUSTOMER,Reports,N/A,NO,Map,MISSING,MEDIUM,Monthly spending summary
+132,/api/reports/accounts/spending-overview,GET,CUSTOMER+,Reports,N/A,NO,ApiResponse,MISSING,MEDIUM,Account spending analysis
+```
+
+## Quick Statistics
+
+- **Total Endpoints:** 132
+- **Implemented:** 54 (41%)
+- **Missing:** 64 (48%)
+- **Broken:** 14 (11%)
+- **Response Format Issues:** 22 (17%)
+
+## Critical Items to Fix for College Presentation
+
+1. Manager approval/rejection endpoints (path issue)
+2. Admin dashboard endpoints (path issues)
+3. Card operations (method/path mismatches)
+4. Response format standardization (22 endpoints)

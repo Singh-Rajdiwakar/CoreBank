@@ -90,6 +90,8 @@ pnpm-lock.yaml
 .cache/
 .parcel-cache/
 .eslintcache
+*.psp
+*.pdf
 
 # ======================
 # Secrets

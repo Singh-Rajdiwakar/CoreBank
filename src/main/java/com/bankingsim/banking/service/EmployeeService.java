@@ -70,6 +70,11 @@ public class EmployeeService {
                 .map(this::toResponse));
     }
 
+    public PageResponse<EmployeeResponse> allEmployees(int page, int size) {
+        return PageMapper.from(employeeRepository.findAll(PageRequest.of(page, size))
+                .map(this::toResponse));
+    }
+
     public PageResponse<CustomerResponse> assignedBranchCustomers(int page, int size) {
         Employee employee = employeeRepository.findByUserId(SecurityUtils.currentUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee profile not found"));

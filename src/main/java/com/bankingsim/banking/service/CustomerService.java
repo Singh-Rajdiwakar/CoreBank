@@ -118,7 +118,11 @@ public class CustomerService {
     }
 
     public CustomerResponse getMyProfile() {
-        Customer customer = customerRepository.findByUserId(SecurityUtils.currentUserId())
+        Long userId = SecurityUtils.currentUserId();
+        if (userId == null) {
+            throw new ResourceNotFoundException("User not authenticated");
+        }
+        Customer customer = customerRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer profile not found"));
         return CustomerMapper.toResponse(customer);
     }
@@ -242,6 +246,7 @@ public class CustomerService {
         return customerDocumentRepository.findByCustomerId(customerId);
     }
 
+    @Transactional
     public PageResponse<CustomerResponse> search(Long branchId,
                                                  KycStatus kycStatus,
                                                  CustomerStatus status,

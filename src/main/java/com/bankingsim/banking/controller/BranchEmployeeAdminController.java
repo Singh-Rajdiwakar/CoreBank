@@ -76,4 +76,13 @@ public class BranchEmployeeAdminController {
             @RequestParam(defaultValue = "20") int size) {
         return ApiResponse.ok(employeeService.byBranch(branchId, page, size));
     }
+
+    @GetMapping("/employees")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','AUDITOR')")
+    @org.springframework.transaction.annotation.Transactional
+    public ApiResponse<PageResponse<EmployeeResponse>> listAllEmployees(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ApiResponse.ok(employeeService.allEmployees(page, size));
+    }
 }

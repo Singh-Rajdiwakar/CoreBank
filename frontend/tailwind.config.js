@@ -1,35 +1,51 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["'DM Sans'", 'system-ui', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ["'Space Grotesk'", "'DM Sans'", 'system-ui', 'sans-serif'],
-        mono: ["'JetBrains Mono'", 'ui-monospace', 'Consolas', 'monospace'],
-      },
       colors: {
-        ink: '#0b0d12',
-        paper: '#f6f4ef',
-        card: '#ffffff',
-        muted: '#5f6b7a',
-        primary: {
-          DEFAULT: '#0a7a5e',
-          600: '#08634c',
-          700: '#064d3b',
-          800: '#053829',
+        'neon': {
+          'blue': '#0ea5e9',
+          'cyan': '#06b6d4',
+          'dark': '#020817',
+          'darker': '#0a0f1e',
+          'gold': '#f59e0b',
+        }
+      },
+      fontFamily: {
+        'orbitron': ['Orbitron', 'sans-serif'],
+        'sora': ['Sora', 'sans-serif'],
+      },
+      animation: {
+        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'shimmer': 'shimmer 2s infinite',
+        'glow': 'glow 2s ease-in-out infinite',
+      },
+      keyframes: {
+        'pulse-glow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
         },
-        danger: '#b42318',
-        warning: '#b45309',
-        success: '#047857',
+        'float': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '-1000px 0' },
+          '100%': { backgroundPosition: '1000px 0' },
+        },
+        'glow': {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)' },
+          '50%': { boxShadow: '0 0 40px rgba(14, 165, 233, 0.8)' },
+        }
       },
-      boxShadow: {
-        card: '0 14px 40px -26px rgba(7, 18, 15, 0.35)',
-        soft: '0 10px 25px -14px rgba(0, 0, 0, 0.25)',
-      },
-      borderRadius: {
-        xl2: '1.25rem',
-      },
+      backdropBlur: {
+        'glass': '16px',
+      }
     },
   },
   plugins: [],
