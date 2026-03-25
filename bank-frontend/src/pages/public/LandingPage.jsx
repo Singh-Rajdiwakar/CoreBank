@@ -117,34 +117,65 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">
+          <h2 className="text-4xl font-bold text-center mb-4">
             <RevealText text="Why Choose NexPay?" delay={0.1} />
           </h2>
+          <p className="text-center text-gray-600 mb-16 text-lg max-w-2xl mx-auto">
+            Experience banking the way it should be — secure, fast, and designed for you.
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 scroll-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 scroll-fade-in">
             {[
               {
+                icon: '⚡',
                 title: 'Lightning Fast',
-                description: 'Transfers complete in seconds, not hours.',
+                description: 'Transfers complete in seconds, not hours. Real-time processing with instant confirmations.',
+                borderColor: 'border-blue-500'
               },
               {
+                icon: '🔐',
                 title: 'AI-Powered Security',
-                description: 'Fraud detection that works 24/7.',
+                description: 'Advanced fraud detection that works 24/7 using machine learning algorithms.',
+                borderColor: 'border-purple-500'
               },
               {
+                icon: '💰',
                 title: 'Zero Hidden Fees',
-                description: 'Complete transparency in every transaction.',
+                description: 'Complete transparency. No surprise charges, just honest pricing for every transaction.',
+                borderColor: 'border-green-500'
+              },
+              {
+                icon: '🌍',
+                title: 'Global Reach',
+                description: 'Send and receive money internationally with competitive exchange rates.',
+                borderColor: 'border-orange-500'
+              },
+              {
+                icon: '📱',
+                title: 'Mobile-First Design',
+                description: 'Manage your finances anywhere, anytime with our intuitive mobile app.',
+                borderColor: 'border-pink-500'
+              },
+              {
+                icon: '✓',
+                title: '24/7 Customer Support',
+                description: 'Dedicated support team available round the clock to help you succeed.',
+                borderColor: 'border-cyan-500'
               },
             ].map((feature, idx) => (
               <motion.div
                 key={idx}
-                whileHover={{ y: -5 }}
-                className="card p-8 border-l-4 border-blue-600"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1, duration: 0.6 }}
+                whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+                className={`bg-white card p-8 border-l-4 ${feature.borderColor} cursor-pointer hover:shadow-lg transition-shadow`}
               >
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <div className="text-5xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-bold mb-3 text-black">{feature.title}</h3>
+                <p className="text-gray-800 font-medium leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
