@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
 import { useEffect, useState } from 'react';
 
@@ -75,7 +75,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   console.log('✅ Access granted to protected route');
-  return children;
+  return children ? children : <Outlet />;
 };
 
 export default ProtectedRoute;

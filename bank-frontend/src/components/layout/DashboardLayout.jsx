@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Outlet } from 'react-router-dom';
 import gsap from 'gsap';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
@@ -24,7 +25,7 @@ const DashboardLayout = ({ children }) => {
           transition={{ duration: 0.4 }}
           className="flex-1 overflow-auto bg-white p-8"
         >
-          {children}
+          {children || <Outlet />}
         </motion.main>
       </div>
     </div>

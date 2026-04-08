@@ -1,11 +1,27 @@
 import { create } from 'zustand';
 
+const initialToken = localStorage.getItem('bank_token');
+const initialUserStr = localStorage.getItem('user');
+let initialUser = null;
+let initialIsAuth = false;
+
+if (initialToken && initialUserStr) {
+  try {
+    initialUser = JSON.parse(initialUserStr);
+    initialIsAuth = true;
+  } catch (e) {
+    localStorage.removeItem('bank_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+  }
+}
+
 export const useStore = create((set, get) => ({
   // Auth state
-  user: null,
-  accessToken: null,
-  isAuthenticated: false,
-  loading: true,
+  user: initialUser,
+  accessToken: initialToken,
+  isAuthenticated: initialIsAuth,
+  loading: false,
 
   // Account state
   customer: null,
@@ -15,9 +31,12 @@ export const useStore = create((set, get) => ({
   accountLoading: false,
 
   // Auth actions
-  loginSuccess: (userData, accessToken) => {
+  loginSuccess: (userData, accessToken, refreshToken) => {
     // Store token in localStorage
     localStorage.setItem('bank_token', accessToken);
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
+    }
     localStorage.setItem('user', JSON.stringify(userData));
 
     set({
@@ -30,6 +49,8 @@ export const useStore = create((set, get) => ({
 
   logout: () => {
     localStorage.removeItem('bank_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('access_token');
     localStorage.removeItem('user');
 
     set({
@@ -88,6 +109,8 @@ export const useStore = create((set, get) => ({
       } catch (error) {
         console.error('Failed to hydrate auth state:', error);
         localStorage.removeItem('bank_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('access_token');
         localStorage.removeItem('user');
         set({ loading: false });
       }
