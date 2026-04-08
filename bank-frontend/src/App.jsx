@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useStore } from './store/useStore';
 import { AuthProvider } from './context/AuthContext';
 import CustomCursor from './components/common/CustomCursor';
 import PageTransitionWrapper from './components/common/PageTransitionWrapper';
@@ -8,6 +10,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 // Public Pages
 import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/public/LoginPage';
+import RegisterPage from './pages/public/RegisterPage';
 
 // Admin Dashboard
 import AdminOverview from './pages/dashboard/admin/AdminOverview';
@@ -42,6 +45,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         <Route path="/dashboard/admin/*" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout><Routes><Route index element={<AdminOverview />} /><Route path="users" element={<div className="p-4">Users</div>} /><Route path="*" element={<Navigate to="./" />} /></Routes></DashboardLayout></ProtectedRoute>} />
 
@@ -60,6 +64,11 @@ function AppRoutes() {
 }
 
 function App() {
+  // Initialize auth state from localStorage on app load
+  useEffect(() => {
+    useStore.getState().hydrate();
+  }, []);
+
   return (
     <AuthProvider>
       <Router>

@@ -71,7 +71,7 @@ const LandingPage = () => {
               Experience banking redefined. Fast transfers, zero fraud, and complete peace of mind.
             </p>
             <motion.button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/register')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="btn-primary text-lg"

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import FloatingLabelInput from '../../components/forms/FloatingLabelInput';
-import { authAPI } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
+import axiosClient from '../../api/axiosClient';
+import { useStore } from '../../store/useStore';
 import RevealText from '../../components/animations/RevealText';
 
 const ROLES = [
@@ -17,7 +17,7 @@ const ROLES = [
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const loginSuccess = useStore((state) => state.loginSuccess);
   const cardRef = useRef(null);
   const shakeRef = useRef(null);
 
@@ -56,34 +56,81 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await authAPI.login(email || '', password);
-      const authData = response.data.data || response.data; // Handle ApiResponse wrapper
-      const { accessToken, refreshToken, userId, username, roles, passwordExpired } = authData;
+      // Make POST request to /api/auth/login with email and password
+      const response = await axiosClient.post('/auth/login', {
+        usernameOrEmail: email,
+        password: password,
+        deviceInfo: 'web',
+      });
 
-      // Construct user object from response
+      console.log('Login response:', response);
+
+      // Extract accessToken and user data from response
+      // Handle both wrapped (ApiResponse) and direct response
+      const authData = response.data?.data || response.data;
+      console.log('Auth data from API:', authData);
+      
+      const { accessToken, userId, username, roles } = authData;
+
+      if (!accessToken) {
+        throw new Error('No access token in response');
+      }
+
+      console.log('Raw roles from API:', roles, 'Type:', Array.isArray(roles) ? 'array' : typeof roles);
+
+      // Construct user object - normalize roles to lowercase strings and strip 'role_' prefix
+      let normalizedRoles = [];
+      if (Array.isArray(roles)) {
+        normalizedRoles = roles.map(r => {
+          let roleStr = '';
+          // Handle different role formats
+          if (typeof r === 'string') {
+            roleStr = r;
+          } else if (typeof r === 'object' && r.name) {
+            roleStr = r.name;
+          } else if (typeof r === 'object' && r.authority) {
+            roleStr = r.authority;
+          } else {
+            roleStr = String(r);
+          }
+          // Strip 'role_' prefix and convert to lowercase
+          return roleStr.replace(/^role_/i, '').toLowerCase();
+        });
+      }
+
+      console.log('Normalized roles:', normalizedRoles);
+
       const user = {
         id: userId,
         username: username,
-        role: roles && roles.length > 0 ? roles[0].toLowerCase() : 'customer',
-        roles: roles,
-        passwordExpired: passwordExpired,
+        roles: normalizedRoles,
       };
 
-      login(user, accessToken, refreshToken);
+      console.log('Final user object:', user);
 
-      // Route based on role
-      const roleRoutes = {
+      // Call loginSuccess from Zustand store
+      loginSuccess(user, accessToken);
+
+      // Small delay to ensure state is updated before navigation
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Navigate to role-specific dashboard
+      const primaryRole = normalizedRoles.length > 0 ? normalizedRoles[0] : 'customer';
+      const dashboardRoutes = {
         admin: '/dashboard/admin',
         manager: '/dashboard/manager',
         employee: '/dashboard/employee',
         auditor: '/dashboard/auditor',
         customer: '/dashboard/customer',
       };
-
-      const route = roleRoutes[user.role] || '/dashboard';
-      navigate(route);
+      
+      const targetPath = dashboardRoutes[primaryRole] || '/dashboard/customer';
+      console.log('Navigating to:', targetPath);
+      navigate(targetPath);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
+      // Error handling with try-catch
+      console.error('Login error:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Login failed. Please try again.';
       setError(errorMessage);
       shake();
     } finally {
@@ -93,6 +140,9 @@ const LoginPage = () => {
 
   const handleQuickLogin = async (role) => {
     setSelectedRole(role);
+    setError('');
+    setLoading(true);
+    
     // Demo: use test credentials
     const testCredentials = {
       admin: { email: 'admin@bank.local', password: 'password' },
@@ -108,36 +158,84 @@ const LoginPage = () => {
 
     setTimeout(async () => {
       try {
-        const response = await authAPI.login(creds.email || '', creds.password);
-        const authData = response.data.data || response.data; // Handle ApiResponse wrapper
-        const { accessToken, refreshToken, userId, username, roles, passwordExpired } = authData;
+        // Make POST request to /api/auth/login with test credentials
+        const response = await axiosClient.post('/auth/login', {
+          usernameOrEmail: creds.email,
+          password: creds.password,
+          deviceInfo: 'web',
+        });
 
-        // Construct user object from response
+        console.log('Quick login response:', response);
+
+        // Extract accessToken and user data from response
+        // Handle both wrapped (ApiResponse) and direct response
+        const authData = response.data?.data || response.data;
+        console.log('Auth data from API:', authData);
+        
+        const { accessToken, userId, username, roles } = authData;
+
+        if (!accessToken) {
+          throw new Error('No access token in response');
+        }
+
+        console.log('Raw roles from API:', roles, 'Type:', Array.isArray(roles) ? 'array' : typeof roles);
+
+        // Construct user object - normalize roles to lowercase strings and strip 'role_' prefix
+        let normalizedRoles = [];
+        if (Array.isArray(roles)) {
+          normalizedRoles = roles.map(r => {
+            let roleStr = '';
+            // Handle different role formats
+            if (typeof r === 'string') {
+              roleStr = r;
+            } else if (typeof r === 'object' && r.name) {
+              roleStr = r.name;
+            } else if (typeof r === 'object' && r.authority) {
+              roleStr = r.authority;
+            } else {
+              roleStr = String(r);
+            }
+            // Strip 'role_' prefix and convert to lowercase
+            return roleStr.replace(/^role_/i, '').toLowerCase();
+          });
+        }
+
+        console.log('Normalized roles:', normalizedRoles);
+
         const user = {
           id: userId,
           username: username,
-          role: roles && roles.length > 0 ? roles[0].toLowerCase() : 'customer',
-          roles: roles,
-          passwordExpired: passwordExpired,
+          roles: normalizedRoles,
         };
 
-        login(user, accessToken, refreshToken);
+        console.log('Final user object:', user);
 
-        const roleRoutes = {
+        // Call loginSuccess from Zustand store
+        loginSuccess(user, accessToken);
+
+        // Small delay to ensure state is updated before navigation
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Navigate to role-specific dashboard
+        const primaryRole = normalizedRoles.length > 0 ? normalizedRoles[0] : 'customer';
+        const dashboardRoutes = {
           admin: '/dashboard/admin',
           manager: '/dashboard/manager',
           employee: '/dashboard/employee',
           auditor: '/dashboard/auditor',
           customer: '/dashboard/customer',
         };
-
-        const route = roleRoutes[user.role] || '/dashboard';
-        navigate(route);
+        
+        const targetPath = dashboardRoutes[primaryRole] || '/dashboard/customer';
+        console.log('Navigating to:', targetPath);
+        navigate(targetPath);
       } catch (err) {
-        const errorMessage = err.response?.data?.message || 'Quick login failed.';
+        // Error handling with try-catch
+        console.error('Quick login error:', err);
+        const errorMessage = err.response?.data?.message || err.message || 'Quick login failed.';
         setError(errorMessage);
         shake();
-      } finally {
+        setLoading(false);
         setSelectedRole(null);
       }
     }, 300);
@@ -232,6 +330,16 @@ const LoginPage = () => {
           {/* Footer */}
           <div className="mt-8 text-center text-xs text-gray-600">
             <p>Demo credentials available via quick login buttons</p>
+            <p className="mt-4">
+              Don't have an account?{' '}
+              <motion.a
+                href="/register"
+                whileHover={{ color: '#2563eb' }}
+                className="text-blue-600 font-semibold hover:text-blue-700 transition-colors cursor-pointer"
+              >
+                Sign Up
+              </motion.a>
+            </p>
           </div>
         </motion.div>
       </div>

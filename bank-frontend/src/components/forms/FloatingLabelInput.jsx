@@ -11,6 +11,8 @@ const FloatingLabelInput = ({
   onBlur,
   error,
   disabled = false,
+  placeholder = '',
+  name = '',
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -30,27 +32,29 @@ const FloatingLabelInput = ({
     <div className="relative mb-6">
       <input
         id={id}
+        name={name}
         type={type}
         value={value}
         onChange={onChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        placeholder={placeholder}
         disabled={disabled}
-        className="input-base focus:border-blue-600 focus:ring-1 focus:ring-blue-600 disabled:opacity-50"
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:ring-opacity-20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-white"
       />
       <motion.label
         htmlFor={id}
         animate={{
-          y: isFocused || value ? -24 : 0,
-          fontSize: isFocused || value ? '0.875rem' : '1rem',
-          color: isFocused ? '#2563eb' : '#000000',
+          y: isFocused || value ? -28 : 0,
+          fontSize: isFocused || value ? '0.75rem' : '0.95rem',
+          color: isFocused ? '#2563eb' : '#6b7280',
         }}
-        transition={{ duration: 0.3 }}
-        className="absolute left-4 origin-left pointer-events-none"
+        transition={{ duration: 0.2 }}
+        className="absolute left-4 top-3.5 origin-left pointer-events-none font-medium"
       >
         {label}
       </motion.label>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
     </div>
   );
 };

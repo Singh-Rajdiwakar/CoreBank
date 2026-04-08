@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if user is already logged in
     const storedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('bank_token') || localStorage.getItem('access_token');
 
     if (storedUser && token) {
       try {
@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.error('Failed to parse stored user:', error);
         localStorage.removeItem('user');
+        localStorage.removeItem('bank_token');
         localStorage.removeItem('access_token');
       }
     }
@@ -27,14 +28,18 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData, accessToken, refreshToken) => {
     localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('bank_token', accessToken);
     localStorage.setItem('access_token', accessToken);
-    localStorage.setItem('refresh_token', refreshToken);
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
+    }
     setUser(userData);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('bank_token');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     setUser(null);

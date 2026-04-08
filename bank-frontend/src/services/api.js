@@ -12,7 +12,7 @@ const api = axios.create({
 // Request interceptor - attach JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('bank_token') || localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -55,6 +55,7 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
         return api(originalRequest);
       } catch (refreshError) {
+        localStorage.removeItem('bank_token');
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
@@ -74,12 +75,20 @@ export const authAPI = {
   logout: () => api.post('/auth/logout'),
 };
 
+// Customer API
+export const customerAPI = {
+  getProfile: () => api.get('/customers/me'),
+  getCustomerById: (id) => api.get(`/customers/${id}`),
+};
+
 // Account API
 export const accountAPI = {
-  getAccounts: () => api.get('/accounts'),
+  getAccounts: (customerId) => customerId ? api.get(`/accounts?customerId=${customerId}`) : api.get('/accounts'),
   getAccountById: (id) => api.get(`/accounts/${id}`),
+  getAccountsByCustomer: (customerId) => api.get(`/accounts?customerId=${customerId}`),
   createAccount: (data) => api.post('/accounts', data),
   getStatement: (accountNumber) => api.get(`/accounts/${accountNumber}/statement`),
+  getMiniStatement: (accountNumber) => api.get(`/accounts/${accountNumber}/mini-statement`),
 };
 
 // Transfer API
