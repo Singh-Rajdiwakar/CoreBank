@@ -32,7 +32,8 @@ const EmployeeDisputes = () => {
     setLoading(true);
     try {
       const res = await employeeAPI.getDisputes();
-      setDisputesList(res.data || []);
+      const payload = res.data;
+      setDisputesList(Array.isArray(payload) ? payload : (Array.isArray(payload?.data) ? payload.data : (payload?.data?.content || payload?.content || [])));
     } catch (err) {
       console.error('Error fetching disputes:', err);
       toast.error('Failed to load disputes');

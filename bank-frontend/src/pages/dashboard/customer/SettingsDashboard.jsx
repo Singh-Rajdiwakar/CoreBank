@@ -124,7 +124,7 @@ const SettingsDashboard = () => {
     setLoadingDocs(true);
     try {
       const res = await customerAPI.getDocuments(customer.id);
-      setDocuments(res.data?.data || []);
+      setDocuments(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch documents', err);
     } finally {
@@ -216,10 +216,10 @@ const SettingsDashboard = () => {
                      <div className="space-y-6">
                         <div className="flex items-center justify-center sm:justify-start gap-6">
                            <div className="w-24 h-24 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-3xl font-bold uppercase ring-4 ring-white shadow-md">
-                             {customer.firstName?.[0]}{customer.lastName?.[0]}
+                             {customer?.fullName ? customer.fullName[0] : (customer?.username?.[0] || 'C')}
                            </div>
                            <div>
-                              <h4 className="text-2xl font-bold text-gray-900">{customer.firstName} {customer.lastName}</h4>
+                              <h4 className="text-2xl font-bold text-gray-900">{customer?.fullName || customer?.username || 'Customer'}</h4>
                               <p className="text-gray-500 font-mono text-sm mt-1">Customer ID: {customer.id}</p>
                            </div>
                         </div>

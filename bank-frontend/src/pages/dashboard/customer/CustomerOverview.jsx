@@ -35,7 +35,7 @@ const CustomerOverview = () => {
         // Fetch accounts for this customer
         const customerId = customerData.id || customerData.customerId;
         const accountsRes = await accountAPI.getAccountsByCustomer(customerId);
-        const accountsData = accountsRes.data?.data || accountsRes.data || [];
+        const accountsData = Array.isArray(accountsRes.data) ? accountsRes.data : (Array.isArray(accountsRes.data?.data) ? accountsRes.data.data : (accountsRes.data?.data?.content || accountsRes.data?.content || []));
         console.log('Accounts data:', accountsData);
         setAccounts(accountsData);
 
@@ -60,7 +60,7 @@ const CustomerOverview = () => {
       setAccountLoading(true);
       try {
         const miniRes = await accountAPI.getMiniStatement(primaryAccount.accountNumber);
-        const transactionsData = miniRes.data?.data || miniRes.data || [];
+        const transactionsData = Array.isArray(miniRes.data) ? miniRes.data : (Array.isArray(miniRes.data?.data) ? miniRes.data.data : (miniRes.data?.data?.content || miniRes.data?.content || []));
         console.log('Transactions data:', transactionsData);
         setTransactions(transactionsData);
       } catch (err) {
@@ -82,7 +82,7 @@ const CustomerOverview = () => {
         transition={{ duration: 0.5 }}
       >
         <h1 className="text-4xl font-bold text-gray-900">
-          Welcome back, <span className="text-blue-600">{customer?.firstName || 'Customer'}</span>!
+          Welcome back, <span className="text-blue-600">{(customer?.fullName?.split(' ')[0] || customer?.username || customer?.name) || 'Customer'}</span>!
         </h1>
         <p className="text-gray-600 mt-2">Manage your accounts and transactions</p>
       </motion.div>

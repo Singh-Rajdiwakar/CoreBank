@@ -46,16 +46,16 @@ const AdminFinancialReports = () => {
     try {
       if (activeTab === 'revenue' && !revenueData) {
         const res = await adminAPI.getRevenueReport();
-        setRevenueData(res.data);
+        setRevenueData(res.data?.data || res.data);
       } else if (activeTab === 'loans' && !loanData) {
         const res = await adminAPI.getLoanPortfolioReport();
-        setLoanData(res.data);
+        setLoanData(res.data?.data || res.data);
       } else if (activeTab === 'npa' && !npaData) {
         const res = await adminAPI.getNPASummary();
-        setNpaData(res.data);
+        setNpaData(res.data?.data || res.data);
       } else if (activeTab === 'reconciliation') {
         const res = await adminAPI.getReconciliation(reconDate);
-        setReconData(res.data);
+        setReconData(res.data?.data || res.data);
       }
     } catch (err) {
       console.error(err);
@@ -71,7 +71,7 @@ const AdminFinancialReports = () => {
     setError('');
     try {
       const res = await adminAPI.getReconciliation(reconDate);
-      setReconData(res.data);
+      setReconData(res.data?.data || res.data);
     } catch (err) {
       console.error(err);
       setError('Failed to fetch reconciliation data for this date.');

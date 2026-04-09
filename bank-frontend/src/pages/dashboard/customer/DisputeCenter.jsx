@@ -38,7 +38,7 @@ const DisputeCenter = () => {
     try {
       setLoading(true);
       const res = await disputeAPI.getMyDisputes();
-      setDisputes(res.data?.data || res.data || []);
+      setDisputes(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch disputes:', err);
     } finally {
@@ -51,7 +51,7 @@ const DisputeCenter = () => {
     try {
       setIsFetchingTxs(true);
       const res = await accountAPI.getMiniStatement(accNumber);
-      setTransactions(res.data?.data || res.data || []);
+      setTransactions(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch transactions', err);
     } finally {
@@ -95,7 +95,7 @@ const DisputeCenter = () => {
     setLoadingTimeline(true);
     try {
       const res = await disputeAPI.getDisputeTimeline(dispute.id);
-      setTimeline(res.data?.data || res.data || []);
+      setTimeline(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch timeline', err);
       // fallback

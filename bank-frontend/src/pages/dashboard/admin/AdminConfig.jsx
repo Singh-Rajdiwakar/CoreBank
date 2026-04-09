@@ -39,13 +39,13 @@ const AdminConfig = () => {
     try {
       if (activeTab === 'system') {
         const res = await adminAPI.getSystemConfig();
-        setSystemConfig(res.data);
+        setSystemConfig(res.data?.data || res.data);
       } else if (activeTab === 'interests') {
         const res = await adminAPI.getInterests();
-        setInterests(res.data);
+        setInterests(res.data?.data || res.data);
       } else if (activeTab === 'fees') {
         const res = await adminAPI.getFees();
-        setFees(res.data);
+        setFees(res.data?.data || res.data);
       }
     } catch (err) {
       setError('Failed to load configuration data');

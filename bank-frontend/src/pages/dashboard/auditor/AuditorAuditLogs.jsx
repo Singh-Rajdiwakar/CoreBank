@@ -40,20 +40,22 @@ const AuditorAuditLogs = () => {
 
       const res = await auditorAPI.getAuditLogs(params);
       
+      const payload = res.data?.data || res.data;
+      
       // Handle both standard array response and paginated Spring Boot response format
-      if (res.data.content) {
-        setLogs(res.data.content);
+      if (payload?.content) {
+        setLogs(payload.content);
         setPagination(prev => ({
           ...prev,
-          totalPages: res.data.totalPages || 0,
-          totalElements: res.data.totalElements || 0
+          totalPages: payload.totalPages || 0,
+          totalElements: payload.totalElements || 0
         }));
-      } else if (Array.isArray(res.data)) {
-        setLogs(res.data);
+      } else if (Array.isArray(payload)) {
+        setLogs(payload);
         setPagination(prev => ({
           ...prev,
-          totalPages: Math.ceil(res.data.length / prev.size),
-          totalElements: res.data.length
+          totalPages: Math.ceil(payload.length / prev.size),
+          totalElements: payload.length
         }));
       } else {
         setLogs([]);

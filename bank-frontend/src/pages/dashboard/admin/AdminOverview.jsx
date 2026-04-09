@@ -86,12 +86,13 @@ const AdminOverview = () => {
     setLoadingStats(true);
     try {
       const response = await adminAPI.getDashboardMetrics();
+      const payload = response.data?.data || response.data || {};
       setStats({
-        totalCustomers: response.data.totalCustomers || 0,
-        totalDeposits: response.data.totalDeposits || 0,
-        totalTransactions: response.data.totalTransactions || 0,
-        activeAccounts: response.data.activeAccounts || 0,
-        fraudFlagged: response.data.fraudFlagged || 0,
+        totalCustomers: payload.totalCustomers || 0,
+        totalDeposits: payload.totalDeposits || 0,
+        totalTransactions: payload.totalTransactions || payload.totalTransfers || 0,
+        activeAccounts: payload.totalActiveAccounts || payload.activeAccounts || 0,
+        fraudFlagged: payload.fraudFlaggedTransactions || payload.fraudFlagged || 0,
       });
     } catch (error) {
       console.error('Failed to fetch dashboard metrics:', error);
@@ -104,8 +105,18 @@ const AdminOverview = () => {
     setLoadingVolume(true);
     try {
       const response = await adminAPI.getDailyVolume(date);
-      // Assuming response.data is an array of { hour: '08:00', volume: 15000, count: 42 }
-      setDailyVolume(Array.isArray(response.data) ? response.data : []);
+        const payload = response.data?.data || response.data;
+        let volumeData = [];
+        if (Array.isArray(payload)) {
+          volumeData = payload;
+        } else if (payload?.content) {
+          volumeData = payload.content;
+        } else if (payload && typeof payload === 'object' && payload.date) {
+            volumeData = [
+                { hour: 'Total', volume: Number(payload.totalAmount || 0), count: payload.transactionCount || 0 }
+            ];
+        }
+        setDailyVolume(volumeData);
     } catch (error) {
       console.error('Failed to fetch daily volume:', error);
       // Fallback dummy data if endpoint fails or has no data
@@ -126,7 +137,8 @@ const AdminOverview = () => {
     setLoadingHighValue(true);
     try {
       const response = await adminAPI.getHighValueTransactions(threshold);
-      setHighValueTx(Array.isArray(response.data) ? response.data : []);
+        const payload = response.data?.data || response.data;
+        setHighValueTx(Array.isArray(payload) ? payload : (payload?.content || []));
     } catch (error) {
       console.error('Failed to fetch high value transactions:', error);
       // Fallback

@@ -28,8 +28,8 @@ const DepositsDashboard = () => {
         depositAPI.getMyFDs(),
         depositAPI.getMyRDs()
       ]);
-      setFDs(fdRes.data?.data || fdRes.data || []);
-      setRDs(rdRes.data?.data || rdRes.data || []);
+      setFDs(Array.isArray(fdRes.data) ? fdRes.data : (Array.isArray(fdRes.data?.data) ? fdRes.data.data : (fdRes.data?.data?.content || fdRes.data?.content || [])));
+      setRDs(Array.isArray(rdRes.data) ? rdRes.data : (Array.isArray(rdRes.data?.data) ? rdRes.data.data : (rdRes.data?.data?.content || rdRes.data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch deposits:', err);
     } finally {

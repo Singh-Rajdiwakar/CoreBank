@@ -32,12 +32,12 @@ const ManagerApprovals = () => {
     try {
       if (activeTab === 'transfers') {
         const response = await managerAPI.getPendingTransfers();
-        setTransfers(Array.isArray(response.data) ? response.data : (response.data?.content || response.data?.data || []));
+        setTransfers(Array.isArray(response.data) ? response.data : (Array.isArray(response.data?.data) ? response.data.data : (response.data?.data?.content || response.data?.content || [])));
       } else {
         // Attempt to fetch pending accounts if the endpoint exists
         try {
           const response = await managerAPI.getPendingAccounts();
-          setAccounts(Array.isArray(response.data) ? response.data : (response.data?.content || response.data?.data || []));
+          setAccounts(Array.isArray(response.data) ? response.data : (Array.isArray(response.data?.data) ? response.data.data : (response.data?.data?.content || response.data?.content || [])));
         } catch (e) {
           // Fallback if backend isn't ready
           console.warn("Could not fetch accounts:", e);

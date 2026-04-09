@@ -64,7 +64,7 @@ function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-        <Route path="/dashboard/admin/*" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout><Routes><Route index element={<AdminOverview />} /><Route path="branches" element={<AdminBranches />} /><Route path="staff" element={<div className="p-4">Staff Directory</div>} /><Route path="users" element={<AdminUsers />} /><Route path="config" element={<AdminConfig />} /><Route path="health" element={<AdminSystemHealth />} /><Route path="reports" element={<AdminFinancialReports />} /><Route path="*" element={<Navigate to="./" />} /></Routes></DashboardLayout></ProtectedRoute>} />
+        <Route path="/dashboard/admin/*" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout><Routes><Route index element={<AdminOverview />} /><Route path="branches" element={<AdminBranches />} /><Route path="employees" element={<div className="p-4">Staff Directory Coming Soon</div>} /><Route path="customers" element={<AdminUsers />} /><Route path="config" element={<AdminConfig />} /><Route path="health" element={<AdminSystemHealth />} /><Route path="reports" element={<AdminFinancialReports />} /><Route path="*" element={<Navigate to="./" />} /></Routes></DashboardLayout></ProtectedRoute>} />
 
         <Route path="/dashboard/manager/*" element={<ProtectedRoute allowedRoles={['manager']}><DashboardLayout><Routes>
           <Route index element={<Navigate to="approvals" />} />

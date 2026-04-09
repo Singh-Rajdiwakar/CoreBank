@@ -36,7 +36,7 @@ const FundTransfer = () => {
       try {
         const res = await beneficiaryAPI.getBeneficiaries();
         const data = res.data?.data || res.data || [];
-        setBeneficiaries(Array.isArray(data) ? data : []);
+        setBeneficiaries(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.data?.content || data?.content || [])));
       } catch (error) {
         console.error('Failed to fetch beneficiaries:', error);
       } finally {
@@ -171,7 +171,7 @@ const FundTransfer = () => {
       const customerId = customer?.id || customer?.customerId;
       if (customerId) {
         const accountsRes = await accountAPI.getAccountsByCustomer(customerId);
-        const accountsData = accountsRes.data?.data || accountsRes.data || [];
+        const accountsData = Array.isArray(accountsRes.data) ? accountsRes.data : (Array.isArray(accountsRes.data?.data) ? accountsRes.data.data : (accountsRes.data?.data?.content || accountsRes.data?.content || []));
         setAccounts(accountsData);
         // If primary account was used, update it explicitly (zustand will do it if we map accounts but let's be safe)
         if (accountsData.length > 0) {

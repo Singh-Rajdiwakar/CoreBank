@@ -38,10 +38,10 @@ const EmployeeOperations = () => {
     try {
       if (activeTab === 'customers') {
         const res = await employeeAPI.getAssignedCustomers();
-        setCustomers(Array.isArray(res.data) ? res.data : (res.data?.content || res.data?.data || []));
+        setCustomers(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
       } else {
         const res = await employeeAPI.getFraudCases('OPEN');
-        setFraudCases(Array.isArray(res.data) ? res.data : (res.data?.content || res.data?.data || []));
+        setFraudCases(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
       }
     } catch (err) {
       console.error('Error fetching employee data:', err);
@@ -158,7 +158,7 @@ const EmployeeOperations = () => {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="font-semibold text-gray-900">{customer.firstName} {customer.lastName}</h3>
+                      <h3 className="font-semibold text-gray-900">{customer.fullName || customer.username}</h3>
                       <p className="text-sm text-gray-500">{customer.email}</p>
                     </div>
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${

@@ -29,7 +29,7 @@ const EmployeeTeller = () => {
     try {
       // Endpoint could be /deposits/pending or /deposits?status=PENDING
       const res = await employeeAPI.getPendingDeposits();
-      setPendingDeposits(Array.isArray(res.data) ? res.data : []);
+      setPendingDeposits(Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || [])));
     } catch (err) {
       console.error('Error fetching pending deposits:', err);
       // For development resilience if endpoint is different

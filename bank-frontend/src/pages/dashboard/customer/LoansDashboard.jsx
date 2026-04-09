@@ -18,7 +18,7 @@ const EMIScheduleModal = ({ loan, onClose, onPayEmi }) => {
       try {
         const res = await loanAPI.getEmiSchedule(loan.id);
         const data = res.data?.data || res.data || [];
-        setSchedule(Array.isArray(data) ? data : []);
+        setSchedule(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.data?.content || data?.content || [])));
       } catch (err) {
         console.error('Failed to fetch EMI schedule', err);
       } finally {
@@ -297,7 +297,7 @@ const LoansDashboard = () => {
     try {
       const res = await loanAPI.getMyLoans();
       const data = res.data?.data || res.data || [];
-      setLoans(Array.isArray(data) ? data : []);
+      setLoans(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.data?.content || data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch loans', err);
     } finally {

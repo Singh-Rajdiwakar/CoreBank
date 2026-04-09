@@ -51,7 +51,7 @@ const AdminBranches = () => {
     setLoading(true);
     try {
       const response = await adminAPI.getBranches();
-      setBranches(response.data || []);
+      setBranches(Array.isArray(response.data) ? response.data : (Array.isArray(response.data?.data) ? response.data.data : (response.data?.data?.content || response.data?.content || [])));
     } catch (err) {
       console.error('Fetch branches error', err);
     }
@@ -62,7 +62,8 @@ const AdminBranches = () => {
     setLoadingPerformance(true);
     try {
       const response = await adminAPI.getBranchPerformance();
-      setPerformanceData(response.data || []);
+      const payload = response.data;
+      setPerformanceData(Array.isArray(payload) ? payload : (Array.isArray(payload?.data) ? payload.data : (payload?.data?.content || payload?.content || [])));
     } catch (err) {
       console.error('Fetch performance error', err);
       showNotification('Error loading performance data', 'error');
@@ -150,7 +151,8 @@ const AdminBranches = () => {
     setLoadingEmployees(true);
     try {
       const resp = await adminAPI.getBranchEmployees(branchId);
-      setBranchEmployees((prev) => ({ ...prev, [branchId]: resp.data }));
+      const empsData = Array.isArray(resp.data) ? resp.data : (Array.isArray(resp.data?.data) ? resp.data.data : (resp.data?.data?.content || resp.data?.content || []));
+      setBranchEmployees((prev) => ({ ...prev, [branchId]: empsData }));
     } catch (err) {
       console.error('Fetch employees error', err);
     }
@@ -344,7 +346,7 @@ const AdminBranches = () => {
                                             <div key={emp.id} className="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                                               <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold uppercase">
-                                                  {emp.employeeCode.slice(0, 2)}
+                                                  {String(emp?.employeeCode || '').slice(0, 2)}
                                                 </div>
                                                 <div>
                                                   <p className="text-sm font-bold text-gray-900 font-mono">{emp.employeeCode}</p>

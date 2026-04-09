@@ -25,7 +25,7 @@ const SpendingAnalytics = () => {
       
       // Map API response to match Recharts expected structure if needed
       // Assuming a response like: [ { month: 'Jan', income: 4000, expenses: 2400 }, ... ]
-      setMonthlyData(Array.isArray(data) ? data : []);
+      setMonthlyData(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.data?.content || data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch monthly summary', err);
       // Mock data safely for visual structure if endpoint fails/empty

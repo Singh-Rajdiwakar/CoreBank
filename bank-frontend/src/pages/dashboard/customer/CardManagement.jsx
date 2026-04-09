@@ -46,7 +46,7 @@ const CardManagement = () => {
       try {
         const res = await cardAPI.getCards(primaryAccount.accountNumber);
         const data = res.data?.data || res.data || [];
-        setCards(Array.isArray(data) ? data : []);
+        setCards(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.data?.content || data?.content || [])));
       } catch (err) {
         console.error('Failed to fetch cards:', err);
       } finally {
@@ -265,7 +265,7 @@ const CardManagement = () => {
                        <div className="w-1 h-6 border-l border-yellow-200"></div>
                     </div>
                     <div className="text-2xl tracking-[0.25em] font-mono text-gray-100">
-                      **** **** **** {activeCard.cardNumber.slice(-4)}
+                      **** **** **** {String(activeCard?.cardNumber || '').slice(-4)}
                     </div>
                   </div>
 
@@ -432,7 +432,7 @@ const CardManagement = () => {
               </div>
               <h3 className="text-xl font-bold text-center text-gray-900 mb-2">Block this Card Temporarily?</h3>
               <p className="text-gray-500 text-center text-sm mb-6">
-                Are you sure you want to block your card ending in {activeCard?.cardNumber.slice(-4)}? All transactions will be declined until you unblock it.
+                Are you sure you want to block your card ending in {String(activeCard?.cardNumber || '').slice(-4)}? All transactions will be declined until you unblock it.
               </p>
               <div className="flex space-x-3">
                 <button
@@ -470,7 +470,7 @@ const CardManagement = () => {
               </div>
               <h3 className="text-xl font-bold text-center text-red-700 mb-2">Permanent Hotlist Warning</h3>
               <div className="text-gray-600 text-center text-sm mb-6 space-y-3">
-                <p>You are about to irreversibly HOTLIST your card ending in <strong>{activeCard?.cardNumber.slice(-4)}</strong>.</p>
+                <p>You are about to irreversibly HOTLIST your card ending in <strong>{String(activeCard?.cardNumber || '').slice(-4)}</strong>.</p>
                 <p className="font-semibold text-red-600">This action cannot be undone.</p>
               </div>
               <div className="flex space-x-3">
@@ -499,7 +499,7 @@ const CardManagement = () => {
             <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
               <h3 className="text-xl font-bold text-center text-gray-900 mb-2 mt-2">Set / Change PIN</h3>
               <p className="text-gray-500 text-center text-sm mb-6">
-                Enter your new 4-digit numeric PIN for card ending in {activeCard?.cardNumber.slice(-4)}.
+                Enter your new 4-digit numeric PIN for card ending in {String(activeCard?.cardNumber || '').slice(-4)}.
               </p>
               <form onSubmit={handleSetPin}>
                 <input

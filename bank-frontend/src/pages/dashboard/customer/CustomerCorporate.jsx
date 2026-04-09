@@ -41,7 +41,7 @@ const CustomerCorporate = () => {
     try {
       setLoading(true);
       const res = await accountAPI.getAccountsByCustomer(user?.id);
-      const accList = Array.isArray(res.data) ? res.data : [];
+      const accList = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (res.data?.data?.content || res.data?.content || []));
       setAccounts(accList);
       if (accList.length > 0) {
         setFormData(prev => ({ ...prev, sourceAccountNumber: accList[0].accountNumber }));
@@ -165,7 +165,7 @@ const CustomerCorporate = () => {
         res = await transferAPI.bulkFile(payload);
       }
       
-      setResultData(res.data);
+      setResultData(res.data?.data || res.data);
       toast.success('Bulk transfer processed');
       
       // Reset sensitive fields
