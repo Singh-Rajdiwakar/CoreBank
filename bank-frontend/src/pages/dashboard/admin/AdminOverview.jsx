@@ -119,15 +119,7 @@ const AdminOverview = () => {
         setDailyVolume(volumeData);
     } catch (error) {
       console.error('Failed to fetch daily volume:', error);
-      // Fallback dummy data if endpoint fails or has no data
-      setDailyVolume([
-        { hour: '00:00', volume: 5000, count: 12 },
-        { hour: '04:00', volume: 2000, count: 5 },
-        { hour: '08:00', volume: 45000, count: 120 },
-        { hour: '12:00', volume: 85000, count: 250 },
-        { hour: '16:00', volume: 65000, count: 180 },
-        { hour: '20:00', volume: 30000, count: 80 },
-      ]);
+      setDailyVolume([]);
     } finally {
       setLoadingVolume(false);
     }
@@ -195,7 +187,7 @@ const AdminOverview = () => {
           label="Total Deposits"
           value={stats.totalDeposits}
           isLoading={loadingStats}
-          prefix="$"
+          prefix="₹"
         />
         <StatWidget
           icon="⚠️"
@@ -264,12 +256,12 @@ const AdminOverview = () => {
                     axisLine={false} 
                     tickLine={false} 
                     tick={{ fill: '#6b7280', fontSize: 12 }} 
-                    tickFormatter={(val) => `$${val >= 1000 ? (val / 1000) + 'k' : val}`}
+                    tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000) + 'k' : val}`}
                   />
                   <Tooltip 
                     cursor={{ stroke: '#9ca3af', strokeWidth: 1, strokeDasharray: '3 3' }}
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
-                    formatter={(value) => [`$${value.toLocaleString()}`, 'Volume']}
+                    formatter={(value) => [`₹${value.toLocaleString()}`, 'Volume']}
                     labelStyle={{ color: '#4b5563', fontWeight: 'bold', marginBottom: '4px' }}
                   />
                   <Area 
@@ -297,7 +289,7 @@ const AdminOverview = () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-lg font-bold text-gray-900">High-Value Tx</h2>
-              <p className="text-sm text-gray-500">Above ${highValueThreshold.toLocaleString()}</p>
+              <p className="text-sm text-gray-500">Above ₹${highValueThreshold.toLocaleString()}</p>
             </div>
             <div className="p-2 bg-red-50 text-red-600 rounded-lg">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -340,7 +332,7 @@ const AdminOverview = () => {
                           {tx.status}
                         </p>
                       </div>
-                      <p className="text-lg font-bold text-gray-900">${tx.amount.toLocaleString()}</p>
+                      <p className="text-lg font-bold text-gray-900">₹{tx.amount.toLocaleString()}</p>
                     </div>
                   </div>
                 ))}
@@ -355,3 +347,5 @@ const AdminOverview = () => {
 };
 
 export default AdminOverview;
+
+

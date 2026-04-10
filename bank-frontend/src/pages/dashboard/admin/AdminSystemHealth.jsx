@@ -33,7 +33,7 @@ const AdminSystemHealth = () => {
       const [monRes, summaryRes, queueRes] = await Promise.all([
         adminAPI.getMonitoring(),
         adminAPI.getNotificationSummary(),
-        adminAPI.getNotificationQueue(page, 10)
+        adminAPI.getNotificationQueue('PENDING', page, 10)
       ]);
       setMonitoring(monRes.data);
       setNotifSummary(summaryRes.data);
@@ -239,7 +239,7 @@ const AdminSystemHealth = () => {
             <select
               value={exportChannel}
               onChange={(e) => setExportChannel(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm sm:text-sm"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
             >
               <option value="EMAIL">EMAIL</option>
               <option value="SMS">SMS</option>
@@ -255,7 +255,7 @@ const AdminSystemHealth = () => {
               max="5000"
               value={exportLimit}
               onChange={(e) => setExportLimit(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm sm:text-sm"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
             />
           </div>
           

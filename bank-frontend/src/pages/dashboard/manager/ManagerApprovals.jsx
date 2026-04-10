@@ -110,7 +110,7 @@ const ManagerApprovals = () => {
     }
   };
 
-  const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
+  const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val || 0);
 
   return (
     <div className="max-w-7xl mx-auto h-[calc(100vh-8rem)] flex flex-col space-y-4">

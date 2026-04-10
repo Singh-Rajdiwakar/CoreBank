@@ -216,7 +216,7 @@ const ApplyLoanWizard = ({ onApply, isApplying }) => {
                 <select
                   value={formData.disbursementAccountNumber}
                   onChange={(e) => setFormData({...formData, disbursementAccountNumber: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                 >
                   {accounts.map(acc => (
                     <option key={acc.accountNumber} value={acc.accountNumber}>
@@ -351,6 +351,18 @@ const LoansDashboard = () => {
     }
   };
 
+  const handleForeclose = async (loanId) => {
+    if (!window.confirm('Are you sure you want to request foreclosure for this loan? Additional charges may apply.')) return;
+    try {
+      await loanAPI.forecloseLoan(loanId, 'Customer requested foreclosure');
+      showNotification('Loan foreclosure requested successfully.', 'success');
+      fetchLoans();
+    } catch (err) {
+      console.error('Foreclosure failed', err);
+      showNotification(err.response?.data?.message || 'Failed to foreclose loan', 'error');
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6">
       <AnimatePresence>
@@ -448,8 +460,14 @@ const LoansDashboard = () => {
                           className="flex-1 py-2.5 bg-blue-50 text-blue-700 font-medium rounded-lg hover:bg-blue-100 transition-colors text-sm"
                         >
                           View EMI Schedule
-                        </button>
-                      </div>
+                        </button>                          {loan.status === 'ACTIVE' && (
+                            <button 
+                              onClick={() => handleForeclose(loan.id)}
+                              className="px-4 py-2.5 bg-red-50 text-red-700 font-medium rounded-lg hover:bg-red-100 transition-colors text-sm"
+                            >
+                              Foreclose
+                            </button>
+                          )}                      </div>
                     </motion.div>
                   )
                 })}

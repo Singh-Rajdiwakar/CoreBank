@@ -135,7 +135,7 @@ const EmployeeDisputes = () => {
                     >
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-xs font-mono text-gray-500">#{dispute.id}</span>
-                        <span className="text-sm font-bold text-gray-900">${dispute.amount?.toFixed(2)}</span>
+                        <span className="text-sm font-bold text-gray-900">₹${dispute.amount?.toFixed(2)}</span>
                       </div>
                       <p className="text-sm text-gray-800 mb-3">{dispute.reason}</p>
                       
@@ -204,7 +204,7 @@ const EmployeeDisputes = () => {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="block text-gray-500 mb-1">Amount</span>
-                        <span className="font-bold text-gray-900">${selectedDispute.amount?.toFixed(2)}</span>
+                        <span className="font-bold text-gray-900">₹${selectedDispute.amount?.toFixed(2)}</span>
                       </div>
                       <div>
                         <span className="block text-gray-500 mb-1">Transaction ID</span>
@@ -294,3 +294,4 @@ const EmployeeDisputes = () => {
 };
 
 export default EmployeeDisputes;
+

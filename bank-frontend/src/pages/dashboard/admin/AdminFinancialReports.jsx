@@ -13,7 +13,7 @@ const ShieldExclamationIcon = ({className}) => <svg className={className} fill="
 const CheckBadgeIcon = ({className}) => <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>;
 const EyeIcon = ({className}) => <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>;
 
-const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val);
 
 const AdminFinancialReports = () => {
   const [activeTab, setActiveTab] = useState('revenue');
@@ -160,7 +160,7 @@ const AdminFinancialReports = () => {
                                 </linearGradient>
                               </defs>
                               <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} />
-                              <YAxis stroke="#9ca3af" fontSize={12} tickFormatter={(value) => `$${value/1000}k`} />
+                              <YAxis stroke="#9ca3af" fontSize={12} tickFormatter={(value) => `₹${value/1000}k`} />
                               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                               <Tooltip formatter={(value) => formatCurrency(value)} />
                               <Area type="monotone" dataKey="amount" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRev)" />
@@ -203,7 +203,7 @@ const AdminFinancialReports = () => {
                             <BarChart data={loanData.distribution} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                               <XAxis dataKey="type" stroke="#9ca3af" fontSize={12} />
-                              <YAxis stroke="#9ca3af" fontSize={12} tickFormatter={(value) => `$${value/1000000}M`} />
+                              <YAxis stroke="#9ca3af" fontSize={12} tickFormatter={(value) => `₹${value/1000000}M`} />
                               <Tooltip cursor={{fill: '#f3f4f6'}} formatter={(value) => formatCurrency(value)} />
                               <Bar dataKey="value" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={40} />
                             </BarChart>
@@ -235,7 +235,7 @@ const AdminFinancialReports = () => {
                     <h3 className="text-2xl font-bold text-red-900 mb-2">Non-Performing Assets (NPA)</h3>
                     <p className="text-red-700 text-sm mb-6">Warning: Accounts listed here have high default risk or missed consecutive payments.</p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                        <div className="bg-white p-4 rounded-lg shadow-sm border border-red-100 flex justify-between items-center">
                          <span className="text-red-800 font-medium">Total NPA Value</span>
                          <span className="text-2xl font-bold text-red-600">{npaData?.totalValue ? formatCurrency(npaData.totalValue) : '-'}</span>
@@ -378,3 +378,6 @@ const AdminFinancialReports = () => {
 };
 
 export default AdminFinancialReports;
+
+
+

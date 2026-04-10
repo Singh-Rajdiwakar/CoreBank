@@ -300,7 +300,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading || !email || !password}
-              className="btn-primary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center justify-center font-medium transition-all duration-300 hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-95 w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>

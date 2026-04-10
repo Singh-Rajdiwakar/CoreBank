@@ -240,7 +240,7 @@ const AdminConfig = () => {
                       <input
                         type="text"
                         required
-                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                         placeholder="e.g., SAVINGS_ACC"
                         value={interestForm.productType}
                         onChange={(e) => setInterestForm({...interestForm, productType: e.target.value.toUpperCase()})}
@@ -254,7 +254,7 @@ const AdminConfig = () => {
                         min="0"
                         max="100"
                         required
-                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                         placeholder="4.50"
                         value={interestForm.annualRate}
                         onChange={(e) => setInterestForm({...interestForm, annualRate: e.target.value})}
@@ -335,19 +335,19 @@ const AdminConfig = () => {
                       <input
                         type="text"
                         required
-                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                         placeholder="e.g., IMPS_TRANSFER_FEE"
                         value={feeForm.feeCode}
                         onChange={(e) => setFeeForm({...feeForm, feeCode: e.target.value.toUpperCase()})}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Fixed Amount ($)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Fixed Amount (₹)</label>
                       <input
                         type="number"
                         step="0.01"
                         min="0"
-                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                         placeholder="2.50"
                         value={feeForm.amount}
                         onChange={(e) => setFeeForm({...feeForm, amount: e.target.value})}
@@ -360,7 +360,7 @@ const AdminConfig = () => {
                         step="0.01"
                         min="0"
                         max="100"
-                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-white"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300 bg-white"
                         placeholder="0.5"
                         value={feeForm.percentage}
                         onChange={(e) => {

@@ -55,7 +55,7 @@ const QuickTransfer = () => {
           <select
             value={formData.transferType}
             onChange={(e) => setFormData({ ...formData, transferType: e.target.value })}
-            className="input-base"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
           >
             <option value="self">Own Account</option>
             <option value="upi">UPI</option>
@@ -84,7 +84,7 @@ const QuickTransfer = () => {
         <button
           type="submit"
           disabled={loading || !formData.recipient || !formData.amount}
-          className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center justify-center font-medium transition-all duration-300 hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-95 w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Processing...' : 'Transfer Now'}
         </button>

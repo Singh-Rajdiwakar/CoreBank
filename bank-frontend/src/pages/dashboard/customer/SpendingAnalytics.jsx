@@ -28,13 +28,7 @@ const SpendingAnalytics = () => {
       setMonthlyData(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : (data?.data?.content || data?.content || [])));
     } catch (err) {
       console.error('Failed to fetch monthly summary', err);
-      // Mock data safely for visual structure if endpoint fails/empty
-      setMonthlyData([
-        { month: 'Jan', income: 4000, expenses: 2400 },
-        { month: 'Feb', income: 4500, expenses: 2100 },
-        { month: 'Mar', income: 4200, expenses: 2800 },
-        { month: 'Apr', income: 5000, expenses: 2600 }
-      ]);
+      setMonthlyData([]);
     } finally {
       setLoading(false);
     }
@@ -58,14 +52,7 @@ const SpendingAnalytics = () => {
       setCategoryData(mappedData);
     } catch (err) {
       console.error('Failed to fetch category data', err);
-      // Mock fallback
-      setCategoryData([
-        { name: 'Food & Dining', value: 800 },
-        { name: 'Shopping', value: 500 },
-        { name: 'Transportation', value: 300 },
-        { name: 'Housing', value: 1200 },
-        { name: 'Entertainment', value: 400 }
-      ]);
+      setCategoryData([]);
     } finally {
       setLoading(false);
     }

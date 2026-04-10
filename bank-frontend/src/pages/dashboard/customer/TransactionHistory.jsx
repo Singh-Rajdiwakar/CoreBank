@@ -171,16 +171,7 @@ const TransactionHistory = () => {
        setSelectedReceipt(receiptData);
     } catch (err) {
        console.error('Failed to fetch receipt:', err);
-       // Mock receipt data if the backend API 404s (e.g. if it was a generic transaction rather than a registered transfer)
-       setSelectedReceipt({
-         timestamp: tx.timestamp || tx.date,
-         amount: tx.amount,
-         referenceNumber: tx.referenceNumber || tx.id,
-         mode: tx.type,
-         sourceAccount: selectedAccountId,
-         destinationAccount: tx.destinationAccount || 'External',
-         remarks: tx.description || 'N/A'
-       });
+
     } finally {
        setLoadingReceipt(false);
     }
@@ -285,7 +276,7 @@ const TransactionHistory = () => {
                type="date"
                value={filters.from}
                onChange={(e) => setFilters({...filters, from: e.target.value})}
-               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-600 focus:border-blue-600 outline-none"
+               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
              />
            </div>
            
@@ -295,7 +286,7 @@ const TransactionHistory = () => {
                type="date"
                value={filters.to}
                onChange={(e) => setFilters({...filters, to: e.target.value})}
-               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-600 focus:border-blue-600 outline-none"
+               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                max={new Date().toISOString().split('T')[0]} // Max today
              />
            </div>

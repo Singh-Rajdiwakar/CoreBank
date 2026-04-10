@@ -3,40 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { managerAPI } from '../../../services/api';
 import Toast from '../../../components/common/Toast';
 
-const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
-
-const mockLoans = [
-  {
-    id: 101,
-    customerId: 'CUST-001',
-    loanType: 'HOME_LOAN',
-    principalAmount: 250000,
-    requestedInterestRate: 6.5,
-    tenureMonths: 240,
-    status: 'PENDING_APPROVAL',
-    purpose: 'Buying a new apartment in midtown.'
-  },
-  {
-    id: 102,
-    customerId: 'CUST-089',
-    loanType: 'PERSONAL_LOAN',
-    principalAmount: 15000,
-    requestedInterestRate: 10.0,
-    tenureMonths: 36,
-    status: 'PENDING_APPROVAL',
-    purpose: 'Medical emergency.'
-  },
-  {
-    id: 103,
-    customerId: 'CUST-042',
-    loanType: 'AUTO_LOAN',
-    principalAmount: 35000,
-    requestedInterestRate: 7.2,
-    tenureMonths: 60,
-    status: 'APPROVED', 
-    purpose: 'Used vehicle purchase.'
-  }
-];
+const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(val || 0);
 
 const ManagerLoans = () => {
   const [loans, setLoans] = useState([]);
@@ -65,11 +32,19 @@ const ManagerLoans = () => {
 
   const fetchLoans = async () => {
     setLoading(true);
-    // Mocking the GET fallback since no strict MANAGER getAll pending exists.
-    setTimeout(() => {
-      setLoans(mockLoans);
+    try {
+      const res = await managerAPI.getPendingLoans?.(); 
+      if (res && res.data) {
+         setLoans(res.data.data || res.data);
+      } else {
+         setLoans([]);
+      }
+    } catch (err) {
+      console.error('Failed to fetch pending loans', err);
+      setLoans([]);
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   const showToast = (message, type = 'success') => {
@@ -293,7 +268,7 @@ const ManagerLoans = () => {
                   <select
                     value={reviewData.approve}
                     onChange={(e) => setReviewData({...reviewData, approve: e.target.value === 'true'})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                   >
                     <option value="true">Approve Loan</option>
                     <option value="false">Reject Loan</option>
@@ -308,7 +283,7 @@ const ManagerLoans = () => {
                          type="number" step="0.01" min="0.1" required={reviewData.approve}
                          value={reviewData.annualInterestRate}
                          onChange={(e) => setReviewData({...reviewData, annualInterestRate: e.target.value})}
-                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium"
+                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                          placeholder={`e.g. ${selectedLoan.requestedInterestRate}`}
                        />
                        <span className="ml-3 text-sm text-gray-500 font-medium bg-gray-100 px-3 py-2 rounded-md">Requested: {selectedLoan.requestedInterestRate}%</span>
@@ -323,7 +298,7 @@ const ManagerLoans = () => {
                     value={reviewData.remarks}
                     onChange={(e) => setReviewData({...reviewData, remarks: e.target.value})}
                     placeholder="Provide reasoning for this rating/decision..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium resize-none shadow-sm"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                   ></textarea>
                 </div>
 
@@ -402,7 +377,7 @@ const ManagerLoans = () => {
                     value={forecloseRemarks}
                     onChange={(e) => setForecloseRemarks(e.target.value)}
                     placeholder="Provide justification for foreclosure..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm h-24 resize-none"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300"
                     required
                   ></textarea>
                 </div>

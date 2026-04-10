@@ -14,7 +14,8 @@ const sidebarItems = {
     { label: 'Dashboard', path: '/dashboard/admin', icon: <LayoutDashboard size={20} /> },
     { label: 'Branch Management', path: '/dashboard/admin/branches', icon: <Building2 size={20} /> },
     { label: 'Employee Setup', path: '/dashboard/admin/employees', icon: <Users size={20} /> },
-    { label: 'Customer Moderation', path: '/dashboard/admin/customers', icon: <ShieldAlert size={20} /> },
+      { label: 'Fraud Activity', path: '/dashboard/admin/fraud', icon: <ShieldAlert size={20} /> },
+      { label: 'Customer Moderation', path: '/dashboard/admin/customers', icon: <Users size={20} /> },
     { label: 'System Config & Fees', path: '/dashboard/admin/config', icon: <Settings size={20} /> },
     { label: 'Advanced Reports', path: '/dashboard/admin/reports', icon: <PieChart size={20} /> },
     { label: 'System Health & Logs', path: '/dashboard/admin/health', icon: <Info size={20} /> },
@@ -24,7 +25,7 @@ const sidebarItems = {
     { label: 'Loan Processing', path: '/dashboard/manager/loans', icon: <Banknote size={20} /> },
   ],
   employee: [
-    { label: 'My Customers', path: '/dashboard/employee/customers', icon: <Users size={20} /> },
+    { label: 'My Customers', path: '/dashboard/employee/operations', icon: <Users size={20} /> },
     { label: 'Teller Desk', path: '/dashboard/employee/teller', icon: <FileTerminal size={20} /> },
     { label: 'Fraud Review', path: '/dashboard/employee/fraud', icon: <AlertCircle size={20} /> },
     { label: 'Dispute Resolution', path: '/dashboard/employee/disputes', icon: <AlertTriangle size={20} /> },
@@ -35,12 +36,15 @@ const sidebarItems = {
   customer: [
     { label: 'Dashboard', path: '/dashboard/customer', icon: <LayoutDashboard size={20} /> },
     { label: 'Fund Transfer', path: '/dashboard/customer/transfer', icon: <ArrowRightLeft size={20} /> },
-    { label: 'Transaction History', path: '/dashboard/customer/history', icon: <FileDigit size={20} /> },
+    { label: 'Corporate Batch', path: '/dashboard/customer/corporate', icon: <Briefcase size={20} /> },
+    { label: 'Beneficiaries', path: '/dashboard/customer/beneficiaries', icon: <Users size={20} /> },
+    { label: 'Transaction History', path: '/dashboard/customer/transactions', icon: <FileDigit size={20} /> },
+    { label: 'Spending Analytics', path: '/dashboard/customer/analytics', icon: <PieChart size={20} /> },
     { label: 'Cards Management', path: '/dashboard/customer/cards', icon: <CreditCard size={20} /> },
     { label: 'FDs & RDs', path: '/dashboard/customer/deposits', icon: <PiggyBank size={20} /> },
     { label: 'Loans', path: '/dashboard/customer/loans', icon: <HandCoins size={20} /> },
     { label: 'Dispute Center', path: '/dashboard/customer/disputes', icon: <AlertTriangle size={20} /> },
-    { label: 'Profile & KYC', path: '/dashboard/customer/profile', icon: <Briefcase size={20} /> },
+    { label: 'Profile & KYC', path: '/dashboard/customer/settings', icon: <Settings size={20} /> },
   ],
 };
 

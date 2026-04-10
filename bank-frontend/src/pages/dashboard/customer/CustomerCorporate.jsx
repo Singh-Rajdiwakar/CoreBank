@@ -107,7 +107,7 @@ const CustomerCorporate = () => {
       
       const newItems = [];
       // Skip header row if present, assuming columns: DestinationAccount, Amount, Remarks
-      const startIndex = lines[0].toLowerCase().includes('account') ? 1 : 0;
+      const startIndex = (lines[0] || '').toLowerCase().includes('account') ? 1 : 0;
 
       for (let i = startIndex; i < lines.length; i++) {
         const parts = lines[i].split(',').map(p => p.trim());
@@ -249,7 +249,7 @@ const CustomerCorporate = () => {
                     <tr className="text-xs font-semibold text-gray-500 uppercase tracking-wider border-b">
                       <th className="pb-3 w-10 text-center">#</th>
                       <th className="pb-3 px-2">Destination Account</th>
-                      <th className="pb-3 px-2">Amount ($)</th>
+                      <th className="pb-3 px-2">Amount (₹)</th>
                       <th className="pb-3 px-2">Remarks</th>
                       <th className="pb-3 w-10 text-center"></th>
                     </tr>
@@ -470,7 +470,7 @@ const CustomerCorporate = () => {
                         {resultData.items?.map((resItem, idx) => (
                           <tr key={idx} className="hover:bg-gray-50">
                             <td className="px-4 py-3 font-mono text-gray-700">{resItem.destinationAccountNumber}</td>
-                            <td className="px-4 py-3 font-mono font-medium">${resItem.amount?.toFixed(2)}</td>
+                            <td className="px-4 py-3 font-mono font-medium">₹${resItem.amount?.toFixed(2)}</td>
                             <td className="px-4 py-3">
                               {resItem.status === 'SUCCESS' ? (
                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">
@@ -512,3 +512,4 @@ const CustomerCorporate = () => {
 };
 
 export default CustomerCorporate;
+

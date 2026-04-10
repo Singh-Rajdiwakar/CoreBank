@@ -265,21 +265,21 @@ const SettingsDashboard = () => {
                            <label className="block text-sm font-semibold text-gray-700 mb-1">Current Password</label>
                            <input 
                              type="password" value={pwdForm.currentPassword} onChange={e => setPwdForm({...pwdForm, currentPassword: e.target.value})}
-                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" required
+                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                            />
                          </div>
                          <div>
                            <label className="block text-sm font-semibold text-gray-700 mb-1">New Password (Min 8 chars)</label>
                            <input 
                              type="password" value={pwdForm.newPassword} onChange={e => setPwdForm({...pwdForm, newPassword: e.target.value})}
-                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" required
+                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                            />
                          </div>
                          <div>
                            <label className="block text-sm font-semibold text-gray-700 mb-1">Confirm New Password</label>
                            <input 
                              type="password" value={pwdForm.confirmPassword} onChange={e => setPwdForm({...pwdForm, confirmPassword: e.target.value})}
-                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" required
+                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                            />
                          </div>
                          <button type="submit" disabled={isSubmitting} className="px-5 py-2.5 bg-gray-900 hover:bg-black text-white rounded-lg font-semibold text-sm transition-colors">
@@ -298,14 +298,14 @@ const SettingsDashboard = () => {
                               <label className="block text-sm font-semibold text-gray-700 mb-1">5-Digit PIN</label>
                               <input 
                                 type="password" maxLength={5} placeholder="•••••" value={pinForm.transactionPin} onChange={e => setPinForm({...pinForm, transactionPin: e.target.value.replace(/\D/g, '')})}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none text-center tracking-widest text-lg" required
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                               />
                             </div>
                             <div className="flex-1">
                               <label className="block text-sm font-semibold text-gray-700 mb-1">Confirm PIN</label>
                               <input 
                                 type="password" maxLength={5} placeholder="•••••" value={pinForm.confirmPin} onChange={e => setPinForm({...pinForm, confirmPin: e.target.value.replace(/\D/g, '')})}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none text-center tracking-widest text-lg" required
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                               />
                             </div>
                          </div>
@@ -380,7 +380,7 @@ const SettingsDashboard = () => {
                               <label className="block text-sm font-semibold text-gray-700 mb-1">Document Type</label>
                               <select 
                                 value={docForm.documentType} onChange={e => setDocForm({...docForm, documentType: e.target.value})}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" required
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                               >
                                  <option value="AADHAAR">Aadhaar Card</option>
                                  <option value="PAN">PAN Card</option>
@@ -393,7 +393,7 @@ const SettingsDashboard = () => {
                               <label className="block text-sm font-semibold text-gray-700 mb-1">Document Number</label>
                               <input 
                                 type="text" value={docForm.documentNumber} onChange={e => setDocForm({...docForm, documentNumber: e.target.value})} placeholder="e.g. ABCDE1234F"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none uppercase" required
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                               />
                            </div>
                            

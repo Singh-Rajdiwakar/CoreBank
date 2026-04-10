@@ -22,6 +22,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Page<Account> findByBranchId(Long branchId, Pageable pageable);
     Page<Account> findByStatus(AccountStatus status, Pageable pageable);
     long countByStatus(AccountStatus status);
+    @Query("SELECT COALESCE(SUM(a.balance), 0) FROM Account a WHERE a.status = :status")
+    java.math.BigDecimal sumBalancesByStatus(@Param("status") AccountStatus status);
     long countByBranchId(Long branchId);
     List<Account> findByStatusAndLastTransactionAtBefore(AccountStatus status, LocalDateTime lastTransactionAt);
     List<Account> findByAccountType(AccountType accountType);
@@ -33,3 +35,4 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             """)
     Page<Account> findByCustomerId(@Param("customerId") Long customerId, Pageable pageable);
 }
+

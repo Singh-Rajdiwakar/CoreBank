@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { adminAPI } from '../../../services/api';
 import Toast from '../../../components/common/Toast';
+import CustomerCreateModal from './CustomerCreateModal';
 
 const AdminUsers = () => {
   const [activeTab, setActiveTab] = useState('CUSTOMERS');
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [showCreateModal, setShowCreateModal] = useState(false);
   
   // Customers State
   const [customers, setCustomers] = useState([]);
@@ -39,15 +41,10 @@ const AdminUsers = () => {
     setLoading(true);
     try {
       const response = await adminAPI.getCustomers();
-      setCustomers(Array.isArray(response.data) ? response.data : []);
+      const cx = response.data; setCustomers(Array.isArray(cx) ? cx : (Array.isArray(cx?.data) ? cx.data : (cx?.data?.content || [])));
     } catch (error) {
       console.error('Failed to fetch customers', error);
-      // Fallback mock data if API fails
-      setCustomers([
-        { id: 'CUST-1002', name: 'Alice Smith', email: 'alice@example.com', status: 'ACTIVE' },
-        { id: 'CUST-1045', name: 'James Doe', email: 'james@example.com', status: 'ACTIVE' },
-        { id: 'CUST-1099', name: 'Eve Johnson', email: 'eve@example.com', status: 'BLOCKED' },
-      ]);
+      setCustomers([]);
     } finally {
       setLoading(false);
     }
@@ -57,11 +54,8 @@ const AdminUsers = () => {
     setLoadingLocked(true);
     try {
       // Mocking / fallback if the endpoint doesn't return properly
-      const response = await adminAPI.getLockedUsers().catch(() => ({ data: [
-        { id: 'USR-201', username: 'suspicious_bob', email: 'bob@example.com', failedAttempts: 7, status: 'LOCKED' },
-        { id: 'USR-205', username: 'john_hacked', email: 'john@example.com', failedAttempts: 5, status: 'LOCKED' }
-      ]}));
-      setLockedUsers(Array.isArray(response.data) ? response.data : []);
+      const response = await adminAPI.getLockedUsers().catch(() => ({ data: [] }));
+      const lx = response.data; setLockedUsers(Array.isArray(lx) ? lx : (Array.isArray(lx?.data) ? lx.data : (lx?.data?.content || [])));
     } catch (error) {
       console.error('Failed to fetch locked users', error);
     } finally {
@@ -71,11 +65,11 @@ const AdminUsers = () => {
 
   // Filtered list
   const filteredCustomers = customers.filter(c => 
-    c.id?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    c.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+      String(c.id || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+      String(c.customerCode || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(c.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(c.name || c.fullName || '').toLowerCase().includes(searchQuery.toLowerCase())
+    );
   const handleToggleBlock = async (customer) => {
     if (customer.status === 'BLOCKED') {
       // Unblock immediately
@@ -95,6 +89,20 @@ const AdminUsers = () => {
       setTargetCustomer(customer);
       setBlockRemarks('');
       setShowBlockModal(true);
+    }
+  };
+
+  const handleArchiveCustomer = async (customer) => {
+      if (!window.confirm(`Are you sure you want to permanently archive ${customer.name || customer.fullName || 'this customer'}? This action cannot be undone.`)) return;
+    setIsUpdating(true);
+    try {
+      await adminAPI.archiveCustomer(customer.id);
+      showNotification('Customer archived successfully', 'success');
+      fetchCustomers();
+    } catch (err) {
+      showNotification('Failed to archive customer.', 'error');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -195,11 +203,21 @@ const AdminUsers = () => {
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <button onClick={fetchCustomers} className="text-gray-400 hover:text-blue-600 transition-colors">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </button>
+              <div className="flex items-center space-x-3">
+                <button onClick={() => setShowCreateModal(true)} className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                  <span className="flex items-center space-x-2">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>New Customer</span>
+                  </span>
+                </button>
+                <button onClick={fetchCustomers} className="text-gray-400 hover:text-blue-600 transition-colors" title="Refresh list">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             {/* Customers Table */}
@@ -222,11 +240,11 @@ const AdminUsers = () => {
                     filteredCustomers.map((customer) => (
                       <tr key={customer.id} className={`hover:bg-gray-50 transition-colors ${customer.status === 'BLOCKED' ? 'bg-red-50/20' : ''}`}>
                         <td className="px-6 py-4">
-                          <div className="font-semibold text-gray-900">{customer.name}</div>
-                          <div className="text-sm text-gray-500">{customer.email}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="font-mono text-sm tracking-wider text-gray-600">{customer.id}</span>
+                            <div className="font-semibold text-gray-900">{customer.name || customer.fullName}</div>
+                            <div className="text-sm text-gray-500">{customer.email}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-mono text-sm tracking-wider text-gray-600">{customer.customerCode || customer.id || 'N/A'}</span>
                         </td>
                         <td className="px-6 py-4">
                           <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -235,19 +253,32 @@ const AdminUsers = () => {
                             {customer.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-6 py-4 flex gap-4 justify-end items-center">
                           {/* Toggle Switch */}
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-[10px] uppercase text-gray-500 font-bold">{customer.status === 'BLOCKED' ? 'Unblock' : 'Block'}</span>
+                            <button
+                              disabled={isUpdating}
+                              onClick={() => handleToggleBlock(customer)}
+                              className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors outline-none disabled:opacity-50
+                                ${customer.status === 'BLOCKED' ? 'bg-red-600' : 'bg-green-500'}`}
+                            >
+                              <span 
+                                className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+                                  customer.status === 'BLOCKED' ? 'translate-x-6' : 'translate-x-1'
+                                }`} 
+                              />
+                            </button>
+                          </div>
+                          
+                          {/* Archive Button */}
                           <button
+                            title="Globally Archive Customer"
                             disabled={isUpdating}
-                            onClick={() => handleToggleBlock(customer)}
-                            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors outline-none disabled:opacity-50
-                              ${customer.status === 'BLOCKED' ? 'bg-red-600' : 'bg-green-500'}`}
+                            onClick={() => handleArchiveCustomer(customer)}
+                            className="p-2 text-gray-400 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
                           >
-                            <span 
-                              className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
-                                customer.status === 'BLOCKED' ? 'translate-x-6' : 'translate-x-1'
-                              }`} 
-                            />
+                            <svg xmlns="http://www.Oorg/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
                           </button>
                         </td>
                       </tr>
@@ -385,6 +416,14 @@ const AdminUsers = () => {
         )}
       </AnimatePresence>
 
+      {/* Create Customer Modal */}
+      <CustomerCreateModal 
+        isOpen={showCreateModal} 
+        onClose={() => setShowCreateModal(false)}
+        onCustomerCreated={() => {
+          fetchCustomers();
+        }}
+      />
     </div>
   );
 };

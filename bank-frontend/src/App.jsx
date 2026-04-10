@@ -18,6 +18,8 @@ import ForgotPasswordPage from './pages/public/ForgotPasswordPage';
 import AdminOverview from './pages/dashboard/admin/AdminOverview';
 import AdminBranches from './pages/dashboard/admin/AdminBranches';
 import AdminUsers from './pages/dashboard/admin/AdminUsers';
+import AdminFraudDashboard from './pages/dashboard/admin/AdminFraudDashboard';
+import AdminEmployees from './pages/dashboard/admin/AdminEmployees';
 import AdminConfig from './pages/dashboard/admin/AdminConfig';
 import AdminSystemHealth from './pages/dashboard/admin/AdminSystemHealth';
 import AdminFinancialReports from './pages/dashboard/admin/AdminFinancialReports';
@@ -29,6 +31,7 @@ import ManagerLoans from './pages/dashboard/manager/ManagerLoans';
 // Customer Dashboard
 import CustomerOverview from './pages/dashboard/customer/CustomerOverview';
 import FundTransfer from './pages/dashboard/customer/FundTransfer';
+import CustomerBeneficiaries from './pages/dashboard/customer/CustomerBeneficiaries';
 import TransactionHistory from './pages/dashboard/customer/TransactionHistory';
 import DepositsDashboard from './pages/dashboard/customer/DepositsDashboard';
 import LoansDashboard from './pages/dashboard/customer/LoansDashboard';
@@ -42,6 +45,7 @@ import CustomerCorporate from './pages/dashboard/customer/CustomerCorporate';
 import EmployeeOperations from './pages/dashboard/employee/EmployeeOperations';
 import EmployeeDisputes from './pages/dashboard/employee/EmployeeDisputes';
 import EmployeeTeller from './pages/dashboard/employee/EmployeeTeller';
+import EmployeeFraud from './pages/dashboard/employee/EmployeeFraud';
 
 // Auditor Dashboard
 import AuditorAuditLogs from './pages/dashboard/auditor/AuditorAuditLogs';
@@ -64,7 +68,7 @@ function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-        <Route path="/dashboard/admin/*" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout><Routes><Route index element={<AdminOverview />} /><Route path="branches" element={<AdminBranches />} /><Route path="employees" element={<div className="p-4">Staff Directory Coming Soon</div>} /><Route path="customers" element={<AdminUsers />} /><Route path="config" element={<AdminConfig />} /><Route path="health" element={<AdminSystemHealth />} /><Route path="reports" element={<AdminFinancialReports />} /><Route path="*" element={<Navigate to="./" />} /></Routes></DashboardLayout></ProtectedRoute>} />
+        <Route path="/dashboard/admin/*" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout><Routes><Route index element={<AdminOverview />} /><Route path="branches" element={<AdminBranches />} /><Route path="employees" element={<AdminEmployees />} /><Route path="customers" element={<AdminUsers />} /><Route path="fraud" element={<AdminFraudDashboard />} /><Route path="config" element={<AdminConfig />} /><Route path="health" element={<AdminSystemHealth />} /><Route path="reports" element={<AdminFinancialReports />} /><Route path="*" element={<Navigate to="./" />} /></Routes></DashboardLayout></ProtectedRoute>} />
 
         <Route path="/dashboard/manager/*" element={<ProtectedRoute allowedRoles={['manager']}><DashboardLayout><Routes>
           <Route index element={<Navigate to="approvals" />} />
@@ -79,6 +83,7 @@ function AppRoutes() {
               <Routes>
                 <Route index element={<Navigate to="operations" replace />} />
                 <Route path="operations" element={<EmployeeOperations />} />
+                <Route path="fraud" element={<EmployeeFraud />} />
                 <Route path="disputes" element={<EmployeeDisputes />} />
                 <Route path="teller" element={<EmployeeTeller />} />
               </Routes>
@@ -99,8 +104,7 @@ function AppRoutes() {
 
         <Route path="/dashboard/customer/*" element={<ProtectedRoute allowedRoles={['customer']}><DashboardLayout><Routes>
           <Route index element={<CustomerOverview />} />
-          <Route path="transfer" element={<FundTransfer />} />
-          <Route path="transactions" element={<TransactionHistory />} />
+          <Route path="transfer" element={<FundTransfer />} />            <Route path="beneficiaries" element={<CustomerBeneficiaries />} />          <Route path="transactions" element={<TransactionHistory />} />
           <Route path="deposits" element={<DepositsDashboard />} />
           <Route path="loans" element={<LoansDashboard />} />
           <Route path="cards" element={<CardManagement />} />

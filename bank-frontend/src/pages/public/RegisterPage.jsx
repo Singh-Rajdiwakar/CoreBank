@@ -186,7 +186,7 @@ const RegisterPage = () => {
           {/* Registration Form */}
           <form onSubmit={handleRegister} className="space-y-4">
             {/* First Row: First Name & Last Name */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FloatingLabelInput
                 id="firstName"
                 type="text"
@@ -219,7 +219,7 @@ const RegisterPage = () => {
             />
 
             {/* Third Row: Username & Phone */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FloatingLabelInput
                 id="username"
                 type="text"
@@ -268,7 +268,7 @@ const RegisterPage = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="btn-primary w-full mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center justify-center font-medium transition-all duration-300 hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-95 w-full mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </motion.button>

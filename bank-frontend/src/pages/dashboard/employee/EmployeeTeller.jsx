@@ -139,9 +139,9 @@ const EmployeeTeller = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Amount ($)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">₹</span>
                   <input
                     type="number"
                     name="amount"
@@ -293,7 +293,7 @@ const EmployeeTeller = () => {
                       className="bg-white border text-left border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow relative grid grid-cols-1 md:grid-cols-4 gap-4 items-center"
                     >
                       <div className="md:col-span-1">
-                        <div className="text-sm font-bold text-gray-900">${deposit.amount?.toFixed(2)}</div>
+                        <div className="text-sm font-bold text-gray-900">₹${deposit.amount?.toFixed(2)}</div>
                         <div className={`mt-1 text-[10px] font-bold inline-block px-1.5 py-0.5 rounded-sm ${
                           deposit.mode === 'CASH' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                         }`}>
@@ -338,3 +338,6 @@ const EmployeeTeller = () => {
 };
 
 export default EmployeeTeller;
+
+
+

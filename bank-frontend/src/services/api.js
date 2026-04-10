@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useStore } from '../store/useStore';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -30,7 +30,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -49,7 +49,7 @@ api.interceptors.response.use(
           }
         );
 
-        const { access_token, refresh_token } = refreshResponse.data;
+        const payload = refreshResponse.data?.data || refreshResponse.data; const access_token = payload.accessToken || payload.access_token; const refresh_token = payload.refreshToken || payload.refresh_token;
         localStorage.setItem('bank_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);
 
@@ -84,6 +84,7 @@ export const authAPI = {
 export const customerAPI = {
   getProfile: () => api.get('/customers/me'),
   getCustomerById: (id) => api.get(`/customers/${id}`),
+  updateCustomer: (id, data) => api.put(`/customers/${id}`, data),
   setTransactionPin: (data) => api.post('/customers/me/transaction-pin', data),
   getDocuments: (id) => api.get(`/customers/${id}/documents`),
   uploadDocument: (id, data) => api.post(`/customers/${id}/documents`, data),
@@ -97,9 +98,14 @@ export const accountAPI = {
   createAccount: (data) => api.post('/accounts', data),
   getStatement: (accountNumber, params) => api.get(`/accounts/${accountNumber}/statement`, { params }),
   getMiniStatement: (accountNumber) => api.get(`/accounts/${accountNumber}/mini-statement`),
-    freeze: (id, remarks) => api.patch(`/accounts/${id}/freeze`, { remarks }),
-    reactivate: (id, remarks) => api.patch(`/accounts/${id}/reactivate`, { remarks }),
-    closeAccount: (id, remarks) => api.patch(`/accounts/${id}/close`, { remarks }),
+  getPassbook: (accountNumber, params) => api.get(`/accounts/${accountNumber}/passbook`, { params }),
+  getBalance: (accountNumber) => api.get(`/accounts/${accountNumber}/balance`),
+  freeze: (id, remarks) => api.patch(`/accounts/${id}/freeze`, { remarks }),
+  unfreeze: (id, remarks) => api.patch(`/accounts/${id}/unfreeze`, { remarks }),
+  block: (id, remarks) => api.patch(`/accounts/${id}/block`, { remarks }),
+  unblock: (id, remarks) => api.patch(`/accounts/${id}/unblock`, { remarks }),
+  reactivate: (id, remarks) => api.patch(`/accounts/${id}/reactivate`, { remarks }),
+  closeAccount: (id, remarks) => api.patch(`/accounts/${id}/close`, { remarks }),
 };
 
 // Transfer API
@@ -112,6 +118,11 @@ export const transferAPI = {
   rtgsTransfer: (data) => api.post('/transfers/rtgs', data),
   scheduledTransfer: (data) => api.post('/transfers/scheduled', data),
   recurringTransfer: (data) => api.post('/transfers/recurring', data),
+  selfTransfer: (data) => api.post('/transfers/self', data),
+  externalTransfer: (data) => api.post('/transfers/external', data),
+  beneficiaryTransfer: (data) => api.post('/transfers/beneficiary', data),
+  reverseTransfer: (reference, data) => api.patch(`/transfers/${reference}/reverse`, data),
+  cancelTransfer: (id) => api.patch(`/transfers/${id}/cancel`),
   getTransfers: () => api.get('/transfers'),
   getTransferById: (id) => api.get(`/transfers/${id}`),
   getRecent: () => api.get('/transfers/recent'),
@@ -125,6 +136,7 @@ export const transferAPI = {
 export const beneficiaryAPI = {
   getBeneficiaries: () => api.get('/beneficiaries'),
   addBeneficiary: (data) => api.post('/beneficiaries', data),
+  verifyBeneficiary: (id) => api.post(`/beneficiaries/${id}/verify`),
   deleteBeneficiary: (id) => api.delete(`/beneficiaries/${id}`),
 };
 
@@ -142,6 +154,7 @@ export const loanAPI = {
 export const cardAPI = {
   getCards: (accountNumber) => accountNumber ? api.get(`/cards?accountNumber=${accountNumber}`) : api.get('/cards'),
   getCardById: (id) => api.get(`/cards/${id}`),
+  getCardTransactions: (cardNumber, limit = 20) => api.get(`/cards/${cardNumber}/transactions?limit=${limit}`),
   updateSettings: (id, data) => api.patch(`/cards/${id}/settings`, data),
   blockCard: (id) => api.patch(`/cards/${id}/block`),
   requestCard: (accountNumber) => api.post(`/cards/request?accountNumber=${accountNumber}`),
@@ -165,13 +178,13 @@ export const adminAPI = {
   getDailyVolume: (date) => api.get(`/admin/reports/daily-volume?date=${date}`),
   getHighValueTransactions: (threshold = 100000) => api.get(`/admin/reports/high-value-transactions?threshold=${threshold}`),
   getBranches: () => api.get('/admin/branches'),
+  getBranchById: (id) => api.get(`/admin/branches/${id}`),
   createBranch: (data) => api.post('/admin/branches', data),
   updateBranch: (id, data) => api.put(`/admin/branches/${id}`, data),
   getBranchEmployees: (branchId) => api.get(`/admin/branches/${branchId}/employees`),
   getBranchPerformance: () => api.get('/admin/reports/branch-performance'),
   addEmployee: (data) => api.post('/admin/employees', data),
-  updateEmployeeStatus: (id, status) => api.patch(`/admin/employees/${id}/status`, { status }),
-  blockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/block`, { remarks }),
+    updateEmployeeStatus: (id, status) => api.patch(`/admin/employees/${id}/status?status=${status}`),    archiveCustomer: (id) => api.patch(`/customers/${id}/archive`),  blockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/block`, { remarks }),
   unblockCustomer: (id) => api.patch(`/admin/customers/${id}/unblock`),
   getLockedUsers: () => api.get('/admin/users/locked'),
   unlockUser: (id) => api.patch(`/admin/users/${id}/unlock`),
@@ -183,7 +196,7 @@ export const adminAPI = {
   updateFee: (data) => api.post('/admin/config/fees', data),
   getMonitoring: () => api.get('/admin/monitoring'),
   getNotificationSummary: () => api.get('/notifications/admin/summary'),
-  getNotificationQueue: (page = 0, size = 20) => api.get(`/notifications/admin/queue?page=${page}&size=${size}`),
+  getNotificationQueue: (status = 'PENDING', page = 0, size = 20) => api.get(`/notifications/admin/queue?status=${status}&page=${page}&size=${size}`),
   retryNotificationDispatch: (channel) => api.patch(`/notifications/admin/retry-dispatch?channel=${channel}`),
   cleanupNotifications: () => api.delete('/notifications/admin/cleanup'),
   
@@ -221,7 +234,10 @@ export const reportAPI = {
 export const disputeAPI = {
   createDispute: (data) => api.post('/disputes', data),
   getMyDisputes: () => api.get('/disputes/me'),
-  getDisputeTimeline: (id) => api.get(`/disputes/${id}/timeline`)
+  getDisputeById: (id) => api.get(`/disputes/me/${id}`),
+  getDisputeTimeline: (id) => api.get(`/disputes/${id}/timeline`),
+  getEvidence: (id) => api.get(`/disputes/${id}/evidence`),
+  uploadEvidence: (id, data) => api.post(`/disputes/${id}/evidence`, data)
 };
 
 // Notification API
@@ -231,7 +247,8 @@ export const notificationAPI = {
   getUnreadCount: () => api.get('/notifications/unread-count'),
   getMyNotifications: (page = 0, size = 10) => api.get(`/notifications/me?page=${page}&size=${size}`),
   markAsRead: (id) => api.patch(`/notifications/${id}/read`),
-  markAllAsRead: () => api.patch('/notifications/me/read-all')
+  markAllAsRead: () => api.patch('/notifications/me/read-all'),
+  deliveryCallback: (data) => api.patch('/notifications/callbacks/delivery', data)
 };
 
 // Manager API
@@ -254,6 +271,7 @@ export const employeeAPI = {
   getFraudCases: () => api.get('/employee/fraud/cases'),
   reviewFraudCase: (id, data) => api.patch(`/fraud/cases/${id}/review`, data),
   getDisputes: (status) => api.get(`/disputes/ops${status ? `?status=${status}` : ''}`),
+  getDisputesSummary: () => api.get('/disputes/ops/summary'),
   assignDispute: (id, data) => api.patch(`/disputes/${id}/assign`, data),
   updateDisputeStatus: (id, data) => api.patch(`/disputes/${id}/status`, data),
   
@@ -261,6 +279,7 @@ export const employeeAPI = {
   getPendingDeposits: () => api.get('/deposits/pending'),
   createDeposit: (data) => api.post('/deposits', data),
   clearDeposit: (reference) => api.patch(`/deposits/${reference}/clear`),
+  createWithdrawal: (data) => api.post('/withdrawals', data),
 };
 
 // Auditor API
@@ -269,3 +288,5 @@ export const auditorAPI = {
 };
 
 export default api;
+
+

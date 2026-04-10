@@ -6,8 +6,12 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
   const initialState = {
     username: '', password: '', email: '', phone: '',
     firstName: '', lastName: '', dob: '', gender: 'MALE',
-    branchId: 1, addressLine1: '', city: '', state: '',
-    postalCode: '', country: 'India'
+    branchId: 1, addressLine1: '', addressLine2: '', city: '', state: '',
+    postalCode: '', country: 'India',
+    pan: '', aadhaar: '', passport: '',
+    nomineeName: '', nomineeRelationship: '', nomineeContact: '',
+    employmentType: 'SALARIED', employerName: '', incomeRange: 'BELOW_5L', 
+    riskProfile: 'LOW'
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -90,52 +94,52 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
                 
                 {/* Account Details */}
                 <div>
-                    <h3 className="text-md font-semibold text-gray-800 mb-3 flex items-center border-b pb-2">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center bg-gray-50/50 p-3 rounded-lg border border-gray-100 shadow-sm">
                         <span className="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">1</span>
                         Account Credentials
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Username *</label>
-                            <input required type="text" name="username" value={formData.username} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="username" value={formData.username} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Password *</label>
-                            <input required type="password" name="password" value={formData.password} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="password" name="password" value={formData.password} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                            <input required type="email" name="email" value={formData.email} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
-                            <input required type="text" name="phone" value={formData.phone} onChange={handleChange} pattern="^[0-9]{10,15}$" title="Must be 10-15 digits" className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="e.g. 9876543210" />
+                            <input required type="text" name="phone" value={formData.phone} onChange={handleChange} pattern="^[0-9]{10,15}$" title="Must be 10-15 digits" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" placeholder="e.g. 9876543210" />
                         </div>
                     </div>
                 </div>
 
                 {/* Personal Information */}
                 <div>
-                    <h3 className="text-md font-semibold text-gray-800 mb-3 flex items-center border-b pb-2">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center bg-gray-50/50 p-3 rounded-lg border border-gray-100 shadow-sm">
                         <span className="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">2</span>
                         Personal Information
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
-                            <input required type="text" name="firstName" value={formData.firstName} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="firstName" value={formData.firstName} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
-                            <input required type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth *</label>
-                            <input required type="date" name="dob" max={new Date().toISOString().split('T')[0]} value={formData.dob} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="date" name="dob" max={new Date().toISOString().split('T')[0]} value={formData.dob} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300">
                                 <option value="MALE">Male</option>
                                 <option value="FEMALE">Female</option>
                                 <option value="OTHER">Other</option>
@@ -143,7 +147,7 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
                         </div>
                         <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Assign to Branch *</label>
-                            <select required name="branchId" value={formData.branchId} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <select required name="branchId" value={formData.branchId} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300">
                                 {branches.length === 0 && <option value="1">Main Branch (Default)</option>}
                                 {branches.map(b => (
                                     <option key={b.id} value={b.id}>{b.name || b.branchName || `Branch #${b.id}`}</option>
@@ -155,30 +159,108 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
 
                 {/* Address Details */}
                 <div>
-                    <h3 className="text-md font-semibold text-gray-800 mb-3 flex items-center border-b pb-2">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center bg-gray-50/50 p-3 rounded-lg border border-gray-100 shadow-sm">
                         <span className="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">3</span>
                         Address Details
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Street Address *</label>
-                            <input required type="text" name="addressLine1" value={formData.addressLine1} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="addressLine1" value={formData.addressLine1} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
-                            <input required type="text" name="city" value={formData.city} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="city" value={formData.city} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
-                            <input required type="text" name="state" value={formData.state} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="state" value={formData.state} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
-                            <input required type="text" name="postalCode" value={formData.postalCode} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="postalCode" value={formData.postalCode} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
-                            <input required type="text" name="country" value={formData.country} onChange={handleChange} className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                            <input required type="text" name="country" value={formData.country} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Additional KYC & Details */}
+                <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center bg-gray-50/50 p-3 rounded-lg border border-gray-100 shadow-sm">
+                        <span className="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">4</span>
+                        KYC & Professional Details
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">PAN</label>
+                            <input type="text" name="pan" value={formData.pan} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Aadhaar</label>
+                            <input type="text" name="aadhaar" value={formData.aadhaar} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Passport (Optional)</label>
+                            <input type="text" name="passport" value={formData.passport} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Employment Type</label>
+                            <select name="employmentType" value={formData.employmentType} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300">
+                                <option value="SALARIED">Salaried</option>
+                                <option value="SELF_EMPLOYED">Self-Employed</option>
+                                <option value="BUSINESS">Business</option>
+                                <option value="RETIRED">Retired</option>
+                                <option value="STUDENT">Student</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Employer Name</label>
+                            <input type="text" name="employerName" value={formData.employerName} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Income Range</label>
+                            <select name="incomeRange" value={formData.incomeRange} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300">
+                                <option value="BELOW_5L">Below 5 Lakhs</option>
+                                <option value="LAKH_5_TO_10">5 - 10 Lakhs</option>
+                                <option value="LAKH_10_TO_20">10 - 20 Lakhs</option>
+                                <option value="ABOVE_20L">Above 20 Lakhs</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Risk Profile</label>
+                            <select name="riskProfile" value={formData.riskProfile} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300">
+                                <option value="LOW">Low</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="HIGH">High</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Nominee Details */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center bg-gray-50/50 p-3 rounded-lg border border-gray-100 shadow-sm">
+                        <span className="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">5</span>
+                        Nominee Details
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Nominee Name</label>
+                            <input type="text" name="nomineeName" value={formData.nomineeName} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Relationship</label>
+                            <input type="text" name="nomineeRelationship" value={formData.nomineeRelationship} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Nominee Contact</label>
+                            <input type="text" name="nomineeContact" value={formData.nomineeContact} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" />
                         </div>
                     </div>
                 </div>

@@ -46,7 +46,7 @@ public class ReportingService {
 
     @Cacheable("dashboard-summary")
     public DashboardSummaryResponse dashboardSummary() {
-        BigDecimal totalDeposits = transactionRepository.sumSuccessfulAmountByType(TransactionType.DEPOSIT);
+        BigDecimal totalDeposits = accountRepository.sumBalancesByStatus(AccountStatus.ACTIVE).add(accountRepository.sumBalancesByStatus(AccountStatus.DORMANT));
         BigDecimal totalWithdrawals = transactionRepository.sumSuccessfulAmountByType(TransactionType.WITHDRAW);
         BigDecimal totalTransfers = transactionRepository.sumSuccessfulTransferAmount();
 
@@ -265,3 +265,4 @@ public class ReportingService {
         }
     }
 }
+

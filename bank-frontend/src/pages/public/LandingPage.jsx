@@ -52,7 +52,7 @@ const LandingPage = () => {
           <h1 className="text-2xl font-bold text-blue-600">NexPay</h1>
           <button
             onClick={() => navigate('/login')}
-            className="btn-primary text-sm"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center justify-center font-medium transition-all duration-300 hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-95 text-sm"
           >
             Sign In
           </button>
@@ -74,7 +74,7 @@ const LandingPage = () => {
               onClick={() => navigate('/register')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="btn-primary text-lg"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center justify-center font-medium transition-all duration-300 hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-95 text-lg"
             >
               Open Account Now
             </motion.button>
