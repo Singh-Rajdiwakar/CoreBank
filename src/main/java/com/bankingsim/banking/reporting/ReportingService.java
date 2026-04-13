@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,6 @@ public class ReportingService {
     private final BranchRepository branchRepository;
     private final AccountHolderRepository accountHolderRepository;
 
-    @Cacheable("dashboard-summary")
     public DashboardSummaryResponse dashboardSummary() {
         BigDecimal totalDeposits = accountRepository.sumBalancesByStatus(AccountStatus.ACTIVE).add(accountRepository.sumBalancesByStatus(AccountStatus.DORMANT));
         BigDecimal totalWithdrawals = transactionRepository.sumSuccessfulAmountByType(TransactionType.WITHDRAW);

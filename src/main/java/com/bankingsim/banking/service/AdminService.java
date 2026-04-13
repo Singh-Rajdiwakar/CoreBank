@@ -14,6 +14,11 @@ import com.bankingsim.banking.repository.CustomerRepository;
 import com.bankingsim.banking.repository.FeeRuleRepository;
 import com.bankingsim.banking.repository.InterestRuleRepository;
 import com.bankingsim.banking.repository.SystemConfigRepository;
+import com.bankingsim.banking.repository.AccountRepository;
+import com.bankingsim.banking.repository.AccountHolderRepository;
+import com.bankingsim.banking.entity.Account;
+import com.bankingsim.banking.entity.AccountHolder;
+import com.bankingsim.banking.entity.enums.AccountStatus;
 import com.bankingsim.banking.util.SecurityUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +38,8 @@ public class AdminService {
     private final AuthService authService;
     private final ReportingService reportingService;
     private final AuditService auditService;
+    private final AccountRepository accountRepository;
+    private final AccountHolderRepository accountHolderRepository;
 
     @Transactional
     public FeeRule saveFeeRule(FeeRuleRequest request) {
@@ -79,6 +86,18 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
         customer.setStatus(CustomerStatus.BLACKLISTED);
         customerRepository.save(customer);
+
+        List<AccountHolder> holders = accountHolderRepository.findByCustomerId(customerId);
+        for (AccountHolder holder : holders) {
+            Account account = holder.getAccount();
+            if (account.getStatus() != AccountStatus.CLOSED) {
+                account.setStatus(AccountStatus.BLOCKED);
+                accountRepository.save(account);
+                auditService.log(SecurityUtils.currentUserId(), "ACCOUNT_BLOCK", "ACCOUNT", account.getId().toString(), null,
+                        AccountStatus.BLOCKED.name(), true, "Customer blocked: " + remarks);
+            }
+        }
+
         auditService.log(SecurityUtils.currentUserId(), "CUSTOMER_BLOCK", "CUSTOMER", customerId.toString(), null,
                 CustomerStatus.BLACKLISTED.name(), true, remarks);
     }
@@ -89,6 +108,18 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
         customer.setStatus(CustomerStatus.ACTIVE);
         customerRepository.save(customer);
+
+        List<AccountHolder> holders = accountHolderRepository.findByCustomerId(customerId);
+        for (AccountHolder holder : holders) {
+            Account account = holder.getAccount();
+            if (account.getStatus() == AccountStatus.BLOCKED) {
+                account.setStatus(AccountStatus.ACTIVE);
+                accountRepository.save(account);
+                auditService.log(SecurityUtils.currentUserId(), "ACCOUNT_UNBLOCK", "ACCOUNT", account.getId().toString(), null,
+                        AccountStatus.ACTIVE.name(), true, "Customer unblocked: " + remarks);
+            }
+        }
+
         auditService.log(SecurityUtils.currentUserId(), "CUSTOMER_UNBLOCK", "CUSTOMER", customerId.toString(), null,
                 CustomerStatus.ACTIVE.name(), true, remarks);
     }

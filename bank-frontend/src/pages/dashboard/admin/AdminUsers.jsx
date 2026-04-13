@@ -71,11 +71,14 @@ const AdminUsers = () => {
       String(c.name || c.fullName || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
   const handleToggleBlock = async (customer) => {
-    if (customer.status === 'BLOCKED') {
+    if (customer.status === 'BLACKLISTED') {
       // Unblock immediately
+      const unblockReason = prompt("Please provide a reason to unblock this user:");
+      if (unblockReason === null) return; // User cancelled
+
       setIsUpdating(true);
       try {
-        await adminAPI.unblockCustomer(customer.id);
+        await adminAPI.unblockCustomer(customer.id, unblockReason || "Unblocked by admin");
         const updated = customers.map(c => c.id === customer.id ? { ...c, status: 'ACTIVE' } : c);
         setCustomers(updated);
         showNotification('Customer unblocked successfully.', 'success');
@@ -116,7 +119,7 @@ const AdminUsers = () => {
     setIsUpdating(true);
     try {
       await adminAPI.blockCustomer(targetCustomer.id, blockRemarks);
-      const updated = customers.map(c => c.id === targetCustomer.id ? { ...c, status: 'BLOCKED' } : c);
+      const updated = customers.map(c => c.id === targetCustomer.id ? { ...c, status: 'BLACKLISTED' } : c);
       setCustomers(updated);
       setShowBlockModal(false);
       showNotification('Customer successfully blocked.', 'success');
@@ -238,7 +241,7 @@ const AdminUsers = () => {
                     <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-400">No matching customers found.</td></tr>
                   ) : (
                     filteredCustomers.map((customer) => (
-                      <tr key={customer.id} className={`hover:bg-gray-50 transition-colors ${customer.status === 'BLOCKED' ? 'bg-red-50/20' : ''}`}>
+                      <tr key={customer.id} className={`hover:bg-gray-50 transition-colors ${customer.status === 'BLACKLISTED' ? 'bg-red-50/20' : ''}`}>
                         <td className="px-6 py-4">
                             <div className="font-semibold text-gray-900">{customer.name || customer.fullName}</div>
                             <div className="text-sm text-gray-500">{customer.email}</div>
@@ -256,16 +259,16 @@ const AdminUsers = () => {
                         <td className="px-6 py-4 flex gap-4 justify-end items-center">
                           {/* Toggle Switch */}
                           <div className="flex flex-col items-center gap-1">
-                            <span className="text-[10px] uppercase text-gray-500 font-bold">{customer.status === 'BLOCKED' ? 'Unblock' : 'Block'}</span>
+                            <span className="text-[10px] uppercase text-gray-500 font-bold">{customer.status === 'BLACKLISTED' ? 'Unblock' : 'Block'}</span>
                             <button
                               disabled={isUpdating}
                               onClick={() => handleToggleBlock(customer)}
                               className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors outline-none disabled:opacity-50
-                                ${customer.status === 'BLOCKED' ? 'bg-red-600' : 'bg-green-500'}`}
+                                ${customer.status === 'BLACKLISTED' ? 'bg-red-600' : 'bg-green-500'}`}
                             >
                               <span 
                                 className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
-                                  customer.status === 'BLOCKED' ? 'translate-x-6' : 'translate-x-1'
+                                    customer.status === 'BLACKLISTED' ? 'translate-x-1' : 'translate-x-6'
                                 }`} 
                               />
                             </button>

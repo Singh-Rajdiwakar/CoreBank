@@ -185,7 +185,7 @@ export const adminAPI = {
   getBranchPerformance: () => api.get('/admin/reports/branch-performance'),
   addEmployee: (data) => api.post('/admin/employees', data),
     updateEmployeeStatus: (id, status) => api.patch(`/admin/employees/${id}/status?status=${status}`),    archiveCustomer: (id) => api.patch(`/customers/${id}/archive`),  blockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/block`, { remarks }),
-  unblockCustomer: (id) => api.patch(`/admin/customers/${id}/unblock`),
+  unblockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/unblock`, { remarks }),
   getLockedUsers: () => api.get('/admin/users/locked'),
   unlockUser: (id) => api.patch(`/admin/users/${id}/unlock`),
   getSystemConfig: () => api.get('/admin/config/system'),
