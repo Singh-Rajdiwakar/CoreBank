@@ -10,7 +10,7 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
     postalCode: '', country: 'India',
     pan: '', aadhaar: '', passport: '',
     nomineeName: '', nomineeRelationship: '', nomineeContact: '',
-    employmentType: 'SALARIED', employerName: '', incomeRange: 'BELOW_5L', 
+    employmentType: 'SALARIED', employerName: '', incomeRange: 'BELOW_300K', 
     riskProfile: 'LOW'
   };
 
@@ -49,8 +49,7 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
     setError('');
     try {
       await adminAPI.createCustomer(formData);
-      showNotification('Customer created successfully', 'success');
-      onSuccess();
+      if (onSuccess) onSuccess();
       onClose();
     } catch (err) {
       console.error(err);
@@ -226,10 +225,10 @@ const CustomerCreateModal = ({ isOpen, onClose, onSuccess, showNotification }) =
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Income Range</label>
                             <select name="incomeRange" value={formData.incomeRange} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300">
-                                <option value="BELOW_5L">Below 5 Lakhs</option>
-                                <option value="LAKH_5_TO_10">5 - 10 Lakhs</option>
-                                <option value="LAKH_10_TO_20">10 - 20 Lakhs</option>
-                                <option value="ABOVE_20L">Above 20 Lakhs</option>
+                                <option value="BELOW_300K">Below 3 Lakhs</option>
+                                <option value="BETWEEN_300K_700K">3 - 7 Lakhs</option>
+                                <option value="BETWEEN_700K_1500K">7 - 15 Lakhs</option>
+                                <option value="ABOVE_1500K">Above 15 Lakhs</option>
                             </select>
                         </div>
                         <div>

@@ -3,11 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { adminAPI } from '../../../services/api';
 import Toast from '../../../components/common/Toast';
 import CustomerCreateModal from './CustomerCreateModal';
+import AccountCreateModal from './AccountCreateModal';
 
 const AdminUsers = () => {
   const [activeTab, setActiveTab] = useState('CUSTOMERS');
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [selectedCustomerForAccount, setSelectedCustomerForAccount] = useState(null);
   
   // Customers State
   const [customers, setCustomers] = useState([]);
@@ -273,7 +276,22 @@ const AdminUsers = () => {
                               />
                             </button>
                           </div>
-                          
+                                                      {/* Open Account Button */}
+                            <button
+                              title="Open New Account"
+                              disabled={isUpdating}
+                              onClick={() => {
+                                setSelectedCustomerForAccount(customer);
+                                setShowAccountModal(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors disabled:opacity-50"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                              </svg>
+                            </button>
                           {/* Archive Button */}
                           <button
                             title="Globally Archive Customer"
@@ -281,7 +299,7 @@ const AdminUsers = () => {
                             onClick={() => handleArchiveCustomer(customer)}
                             className="p-2 text-gray-400 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
                           >
-                            <svg xmlns="http://www.Oorg/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
                           </button>
                         </td>
                       </tr>
@@ -423,9 +441,18 @@ const AdminUsers = () => {
       <CustomerCreateModal 
         isOpen={showCreateModal} 
         onClose={() => setShowCreateModal(false)}
-        onCustomerCreated={() => {
+        onSuccess={() => {
           fetchCustomers();
+          showNotification('Customer created successfully', 'success');
         }}
+        showNotification={showNotification}
+      />
+
+      {/* Create Account Modal */}
+      <AccountCreateModal 
+        isOpen={showAccountModal} 
+        onClose={() => setShowAccountModal(false)}
+        customer={selectedCustomerForAccount}
       />
     </div>
   );
