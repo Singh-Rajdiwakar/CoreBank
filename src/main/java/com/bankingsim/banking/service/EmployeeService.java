@@ -7,10 +7,13 @@ import com.bankingsim.banking.dto.common.PageResponse;
 import com.bankingsim.banking.dto.customer.CustomerResponse;
 import com.bankingsim.banking.entity.Employee;
 import com.bankingsim.banking.entity.User;
+import com.bankingsim.banking.entity.enums.RoleType;
 import com.bankingsim.banking.entity.enums.EmployeeStatus;
+import com.bankingsim.banking.entity.Role;
 import com.bankingsim.banking.exception.DuplicateResourceException;
 import com.bankingsim.banking.exception.ResourceNotFoundException;
 import com.bankingsim.banking.repository.EmployeeRepository;
+import com.bankingsim.banking.repository.RoleRepository;
 import com.bankingsim.banking.repository.UserRepository;
 import com.bankingsim.banking.util.PageMapper;
 import com.bankingsim.banking.util.SecurityUtils;
@@ -25,6 +28,7 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final BranchService branchService;
     private final CustomerService customerService;
     private final AuditService auditService;
@@ -37,6 +41,11 @@ public class EmployeeService {
         employeeRepository.findByUserId(user.getId()).ifPresent(existing -> {
             throw new DuplicateResourceException("Employee already exists for this user");
         });
+
+        Role role = roleRepository.findByName(request.isManager() ? RoleType.ROLE_MANAGER : RoleType.ROLE_EMPLOYEE)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+        user.getRoles().add(role);
+        userRepository.save(user);
 
         Employee employee = new Employee();
         employee.setUser(user);
@@ -71,6 +80,12 @@ public class EmployeeService {
     }
 
     public PageResponse<EmployeeResponse> allEmployees(int page, int size) {
+        if (SecurityUtils.hasRole("ROLE_MANAGER") && !SecurityUtils.hasRole("ROLE_ADMIN")) {
+            Employee employee = employeeRepository.findByUserId(SecurityUtils.currentUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Manager profile not found"));
+            return PageMapper.from(employeeRepository.findByBranchId(employee.getBranch().getId(), PageRequest.of(page, size))
+                    .map(this::toResponse));
+        }
         return PageMapper.from(employeeRepository.findAll(PageRequest.of(page, size))
                 .map(this::toResponse));
     }

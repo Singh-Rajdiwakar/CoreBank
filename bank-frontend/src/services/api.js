@@ -82,6 +82,7 @@ export const authAPI = {
 
 // Customer API
 export const customerAPI = {
+  createCustomer: (data) => api.post('/customers', data),
   getProfile: () => api.get('/customers/me'),
   getCustomerById: (id) => api.get(`/customers/${id}`),
   updateCustomer: (id, data) => api.put(`/customers/${id}`, data),
@@ -184,7 +185,9 @@ export const adminAPI = {
   getBranchEmployees: (branchId) => api.get(`/admin/branches/${branchId}/employees`),
   getBranchPerformance: () => api.get('/admin/reports/branch-performance'),
   addEmployee: (data) => api.post('/admin/employees', data),
-    updateEmployeeStatus: (id, status) => api.patch(`/admin/employees/${id}/status?status=${status}`),    archiveCustomer: (id) => api.patch(`/customers/${id}/archive`),  blockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/block`, { remarks }),
+    updateEmployeeStatus: (id, status) => api.patch(`/admin/employees/${id}/status?status=${status}`),    archiveCustomer: (id) => api.patch(`/customers/${id}/archive`),
+  unarchiveCustomer: (id) => api.patch(`/customers/${id}/unarchive`),
+  blockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/block`, { remarks }),
   unblockCustomer: (id, remarks) => api.patch(`/admin/customers/${id}/unblock`, { remarks }),
   getLockedUsers: () => api.get('/admin/users/locked'),
   unlockUser: (id) => api.patch(`/admin/users/${id}/unlock`),
@@ -261,6 +264,7 @@ export const managerAPI = {
   rejectAccount: (id, remarks) => api.patch(`/accounts/${id}/reject`, { remarks }),
   
   // Loan Processing
+  getPendingLoans: () => api.get('/loans'),
   reviewLoan: (id, data) => api.patch(`/loans/${id}/review`, data),
   disburseLoan: (id) => api.patch(`/loans/${id}/disburse`),
     forecloseLoan: (id, remarks) => api.patch(`/loans/${id}/foreclose`, { remarks })

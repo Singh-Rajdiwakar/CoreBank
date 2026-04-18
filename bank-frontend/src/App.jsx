@@ -27,6 +27,7 @@ import AdminFinancialReports from './pages/dashboard/admin/AdminFinancialReports
 // Manager Dashboard
 import ManagerApprovals from './pages/dashboard/manager/ManagerApprovals';
 import ManagerLoans from './pages/dashboard/manager/ManagerLoans';
+import ManagerEmployees from './pages/dashboard/manager/ManagerEmployees';
 
 // Customer Dashboard
 import CustomerOverview from './pages/dashboard/customer/CustomerOverview';
@@ -74,6 +75,8 @@ function AppRoutes() {
           <Route index element={<Navigate to="approvals" />} />
           <Route path="approvals" element={<ManagerApprovals />} />
           <Route path="loans" element={<ManagerLoans />} />
+          <Route path="employees" element={<ManagerEmployees />} />
+          <Route path="customers" element={<EmployeeOperations />} />
           <Route path="*" element={<Navigate to="approvals" />} />
         </Routes></DashboardLayout></ProtectedRoute>} />
 

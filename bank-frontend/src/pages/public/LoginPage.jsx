@@ -115,7 +115,15 @@ const LoginPage = () => {
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // Navigate to role-specific dashboard
-      const primaryRole = normalizedRoles.length > 0 ? normalizedRoles[0] : 'customer';
+      const getPrimaryRole = (roles) => {
+        if (roles.includes('admin')) return 'admin';
+        if (roles.includes('auditor')) return 'auditor';
+        if (roles.includes('manager')) return 'manager';
+        if (roles.includes('employee')) return 'employee';
+        return 'customer';
+      };
+      
+      const primaryRole = getPrimaryRole(normalizedRoles);
       const dashboardRoutes = {
         admin: '/dashboard/admin',
         manager: '/dashboard/manager',
@@ -217,7 +225,14 @@ const LoginPage = () => {
         await new Promise(resolve => setTimeout(resolve, 100));
 
         // Navigate to role-specific dashboard
-        const primaryRole = normalizedRoles.length > 0 ? normalizedRoles[0] : 'customer';
+        const getPrimaryRole = (roles) => {
+          if (roles.includes('admin')) return 'admin';
+          if (roles.includes('auditor')) return 'auditor';
+          if (roles.includes('manager')) return 'manager';
+          if (roles.includes('employee')) return 'employee';
+          return 'customer';
+        };
+        const primaryRole = getPrimaryRole(normalizedRoles);
         const dashboardRoutes = {
           admin: '/dashboard/admin',
           manager: '/dashboard/manager',

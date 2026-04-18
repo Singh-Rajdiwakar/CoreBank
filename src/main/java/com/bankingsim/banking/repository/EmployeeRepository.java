@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByUserId(Long userId);
+    Page<Employee> findByBranchId(Long branchId, Pageable pageable);
     Page<Employee> findByBranchIdAndStatus(Long branchId, EmployeeStatus status, Pageable pageable);
 }

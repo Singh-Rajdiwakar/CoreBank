@@ -23,6 +23,8 @@ const sidebarItems = {
   manager: [
     { label: 'Approvals Queue', path: '/dashboard/manager/approvals', icon: <CheckSquare size={20} /> },
     { label: 'Loan Processing', path: '/dashboard/manager/loans', icon: <Banknote size={20} /> },
+    { label: 'Branch Team', path: '/dashboard/manager/employees', icon: <Users size={20} /> },
+    { label: 'Branch Customers', path: '/dashboard/manager/customers', icon: <Users size={20} /> }
   ],
   employee: [
     { label: 'My Customers', path: '/dashboard/employee/operations', icon: <Users size={20} /> },

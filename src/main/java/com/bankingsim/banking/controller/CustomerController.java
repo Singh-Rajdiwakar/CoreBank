@@ -89,7 +89,12 @@ public class CustomerController {
         customerService.archive(id);
         return ApiResponse.ok(null, "Customer archived");
     }
-
+    @PatchMapping("/{id}/unarchive")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ApiResponse<Void> unarchive(@PathVariable Long id) {
+        customerService.unarchive(id);
+        return ApiResponse.ok(null, "Customer unarchived");
+    }
     @PostMapping("/me/transaction-pin")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<Void> setTransactionPin(@Valid @RequestBody SetTransactionPinRequest request) {

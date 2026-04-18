@@ -2,6 +2,8 @@ package com.bankingsim.banking.entity;
 
 import com.bankingsim.banking.entity.enums.DocumentType;
 import com.bankingsim.banking.entity.enums.VerificationStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,12 +24,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "customer_documents")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "customer"})
 public class CustomerDocument extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;

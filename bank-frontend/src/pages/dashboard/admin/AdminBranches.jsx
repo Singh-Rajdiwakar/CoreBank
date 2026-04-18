@@ -152,8 +152,10 @@ const AdminBranches = () => {
     setLoadingEmployees(true);
     try {
       const resp = await adminAPI.getBranchEmployees(branchId);
-      const empsData = Array.isArray(resp.data) ? resp.data : (Array.isArray(resp.data?.data) ? resp.data.data : (resp.data?.data?.content || resp.data?.content || []));
-      setBranchEmployees((prev) => ({ ...prev, [branchId]: empsData }));
+      const empsData = resp.data?.data?.content || resp.data?.content || resp.data?.data || resp.data || [];
+      console.log('Branch ' + branchId + ' employees response:', resp.data);
+      console.log('Extracted empsData:', empsData);
+      setBranchEmployees((prev) => ({ ...prev, [branchId]: Array.isArray(empsData) ? empsData : [] }));
     } catch (err) {
       console.error('Fetch employees error', err);
     }
@@ -337,8 +339,9 @@ const AdminBranches = () => {
                                     {loadingEmployees && !branchEmployees[branch.id] ? (
                                       <div className="text-center py-4 text-sm text-gray-500">Loading staff directory...</div>
                                     ) : (
-                                      <div className="grid gap-3">
-                                        {(!branchEmployees[branch.id] || branchEmployees[branch.id].length === 0) ? (
+                                      <div className="grid gap-3">                                          <div className="text-xs text-black break-words bg-gray-100 p-2 rounded">
+                                            DEBUG: {JSON.stringify(branchEmployees[branch.id])}
+                                          </div>                                        {(!branchEmployees[branch.id] || branchEmployees[branch.id].length === 0) ? (
                                           <div className="text-sm text-gray-500 py-3 text-center border border-dashed border-gray-300 rounded-lg">
                                             No staff assigned to this branch yet.
                                           </div>

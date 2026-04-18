@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { adminAPI } from '../../../services/api';
 import Toast from '../../../components/common/Toast';
 
-const AdminEmployees = () => {
+const ManagerEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -295,4 +295,4 @@ const AdminEmployees = () => {
   );
 };
 
-export default AdminEmployees;
+export default ManagerEmployees;

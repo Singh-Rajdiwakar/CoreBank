@@ -10,10 +10,12 @@ import {
   FileText,
   Clock,
   ShieldAlert,
-  ChevronRight
+  ChevronRight,
+  Plus
 } from 'lucide-react';
 import { employeeAPI } from '../../../services/api';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
+import CreateCustomerModal from '../../../components/forms/CreateCustomerModal';
 
 const EmployeeOperations = () => {
   const [activeTab, setActiveTab] = useState('customers');
@@ -27,6 +29,10 @@ const EmployeeOperations = () => {
   const [reviewNotes, setReviewNotes] = useState('');
   const [reviewStatus, setReviewStatus] = useState('CLEAR');
   const [submittingReview, setSubmittingReview] = useState(false);
+
+  // Create Modal State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -93,10 +99,28 @@ const EmployeeOperations = () => {
   return (
     <DashboardLayout>
       <div className="max-w-7xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Operations Dashboard</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage assigned customers and review fraud alerts.</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Operations Dashboard</h1>
+            <p className="text-gray-500 text-sm mt-1">Manage assigned customers and review fraud alerts.</p>
+          </div>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center space-x-2"
+          >
+            <Plus size={18} />
+            <span>New Customer</span>
+          </button>
         </div>
+
+        {toastMessage && (
+          <div className="bg-green-50 text-green-700 p-4 rounded-lg flex items-center justify-between border border-green-200">
+            <span>{toastMessage}</span>
+            <button onClick={() => setToastMessage('')}>
+              <XCircle className="w-5 h-5" />
+            </button>
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="flex space-x-4 border-b border-gray-200">
@@ -328,6 +352,14 @@ const EmployeeOperations = () => {
           )}
         </AnimatePresence>
 
+        <CreateCustomerModal 
+          isOpen={isCreateModalOpen} 
+          onClose={() => setIsCreateModalOpen(false)}
+          onSuccess={(msg) => {
+            setToastMessage(msg);
+            fetchData();
+          }}
+        />
       </div>
     </DashboardLayout>
   );

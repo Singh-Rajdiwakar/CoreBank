@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 public interface LoanRepository extends JpaRepository<Loan, Long> {
     List<Loan> findByCustomerId(Long customerId);
     List<Loan> findByStatus(LoanStatus status);
+    List<Loan> findByCustomerBranchId(Long branchId);
+    List<Loan> findByCustomerBranchIdAndStatus(Long branchId, LoanStatus status);
     long countByStatus(LoanStatus status);
 
     @Query("select coalesce(sum(l.outstandingPrincipal),0) from Loan l")

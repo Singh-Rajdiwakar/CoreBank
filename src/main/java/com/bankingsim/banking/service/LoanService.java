@@ -26,6 +26,7 @@ import com.bankingsim.banking.notification.NotificationService;
 import com.bankingsim.banking.notification.TransactionAlertService;
 import com.bankingsim.banking.repository.BankTransactionRepository;
 import com.bankingsim.banking.repository.EmiScheduleRepository;
+import com.bankingsim.banking.repository.EmployeeRepository;
 import com.bankingsim.banking.repository.LoanRepository;
 import com.bankingsim.banking.util.ReferenceGenerator;
 import com.bankingsim.banking.util.SecurityUtils;
@@ -46,6 +47,7 @@ public class LoanService {
 
     private final LoanRepository loanRepository;
     private final EmiScheduleRepository emiScheduleRepository;
+    private final EmployeeRepository employeeRepository;
     private final AccountService accountService;
     private final CustomerService customerService;
     private final BankTransactionRepository transactionRepository;
@@ -86,10 +88,26 @@ public class LoanService {
         return toResponse(saved);
     }
 
+    private void enforceEmployeeLoanAccess(Loan loan) {
+        if (SecurityUtils.hasRole("ROLE_ADMIN") || SecurityUtils.hasRole("ROLE_AUDITOR")) {
+            return;
+        }
+        if (SecurityUtils.hasRole("ROLE_MANAGER") || SecurityUtils.hasRole("ROLE_EMPLOYEE")) {
+            Long userId = SecurityUtils.currentUserId();
+            Long empBranchId = employeeRepository.findByUserId(userId)
+                    .map(emp -> emp.getBranch().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee profile not found"));
+            if (!empBranchId.equals(loan.getCustomer().getBranch().getId())) {
+                throw new ForbiddenOperationException("Cannot access loan from a different branch");
+            }
+        }
+    }
+
     @Transactional
     public LoanResponse review(Long loanId, LoanDecisionRequest request) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+        enforceEmployeeLoanAccess(loan);
 
         if (loan.getStatus() != LoanStatus.APPLIED && loan.getStatus() != LoanStatus.UNDER_REVIEW) {
             throw new ForbiddenOperationException("Loan cannot be reviewed in current state");
@@ -125,6 +143,7 @@ public class LoanService {
     public LoanResponse disburse(Long loanId) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+        enforceEmployeeLoanAccess(loan);
 
         if (loan.getStatus() != LoanStatus.APPROVED) {
             throw new ForbiddenOperationException("Only approved loans can be disbursed");
@@ -238,6 +257,27 @@ public class LoanService {
     public List<LoanResponse> myLoans() {
         Customer customer = customerService.getCustomerByUserId(SecurityUtils.currentUserId());
         return loanRepository.findByCustomerId(customer.getId()).stream().map(this::toResponse).toList();
+    }
+
+    public List<LoanResponse> getAllLoans(LoanStatus status) {
+        boolean isAdmin = SecurityUtils.hasRole("ROLE_ADMIN") || SecurityUtils.hasRole("ROLE_AUDITOR");
+        
+        if (!isAdmin) {
+            Long userId = SecurityUtils.currentUserId();
+            Long branchId = employeeRepository.findByUserId(userId)
+                    .map(emp -> emp.getBranch().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee profile not found"));
+                    
+            if (status != null) {
+                return loanRepository.findByCustomerBranchIdAndStatus(branchId, status).stream().map(this::toResponse).toList();
+            }
+            return loanRepository.findByCustomerBranchId(branchId).stream().map(this::toResponse).toList();
+        }
+
+        if (status != null) {
+            return loanRepository.findByStatus(status).stream().map(this::toResponse).toList();
+        }
+        return loanRepository.findAll().stream().map(this::toResponse).toList();
     }
 
     public List<EmiScheduleResponse> emiSchedule(Long loanId) {

@@ -23,7 +23,10 @@ const RecentTransactions = ({ transactions, loading, isMiniStatement = false }) 
 
   // Format date nicely
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    if (!dateString) return 'N/A';
+    const date = Array.isArray(dateString) 
+      ? new Date(dateString[0], dateString[1] - 1, dateString[2], dateString[3] || 0, dateString[4] || 0, dateString[5] || 0)
+      : new Date(dateString);
     return date.toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
@@ -33,7 +36,10 @@ const RecentTransactions = ({ transactions, loading, isMiniStatement = false }) 
 
   // Format time
   const formatTime = (dateString) => {
-    const date = new Date(dateString);
+    if (!dateString) return 'N/A';
+    const date = Array.isArray(dateString) 
+      ? new Date(dateString[0], dateString[1] - 1, dateString[2], dateString[3] || 0, dateString[4] || 0, dateString[5] || 0)
+      : new Date(dateString);
     return date.toLocaleTimeString('en-IN', {
       hour: '2-digit',
       minute: '2-digit',

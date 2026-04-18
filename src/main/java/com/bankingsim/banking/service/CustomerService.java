@@ -24,6 +24,7 @@ import com.bankingsim.banking.repository.CustomerDocumentRepository;
 import com.bankingsim.banking.repository.CustomerRepository;
 import com.bankingsim.banking.repository.RoleRepository;
 import com.bankingsim.banking.repository.UserRepository;
+import com.bankingsim.banking.repository.EmployeeRepository;
 import com.bankingsim.banking.util.PageMapper;
 import com.bankingsim.banking.util.ReferenceGenerator;
 import com.bankingsim.banking.util.SecurityUtils;
@@ -45,6 +46,7 @@ public class CustomerService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BranchService branchService;
+    private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomerDocumentRepository customerDocumentRepository;
     private final AuditService auditService;
@@ -112,11 +114,14 @@ public class CustomerService {
         return CustomerMapper.toResponse(saved);
     }
 
+    @Transactional
     public CustomerResponse getById(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        enforceEmployeeCustomerAccess(customer);
         return CustomerMapper.toResponse(customer);
     }
 
+    @Transactional
     public CustomerResponse getMyProfile() {
         Long userId = SecurityUtils.currentUserId();
         if (userId == null) {
@@ -132,6 +137,7 @@ public class CustomerService {
         enforceCustomerSelfAccess(customerId);
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        enforceEmployeeCustomerAccess(customer);
 
         String oldValue = customer.getFirstName() + "|" + customer.getLastName() + "|" + customer.getStatus();
 
@@ -203,12 +209,26 @@ public class CustomerService {
     public void archive(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        enforceEmployeeCustomerAccess(customer);
         customer.setArchived(true);
         customer.setStatus(CustomerStatus.ARCHIVED);
         customerRepository.save(customer);
 
         auditService.log(SecurityUtils.currentUserId(), "CUSTOMER_ARCHIVE", "CUSTOMER", customerId.toString(), null,
                 "archived=true", true, "Customer archived");
+    }
+
+    @Transactional
+    public void unarchive(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        enforceEmployeeCustomerAccess(customer);
+        customer.setArchived(false);
+        customer.setStatus(CustomerStatus.ACTIVE);
+        customerRepository.save(customer);
+
+        auditService.log(SecurityUtils.currentUserId(), "CUSTOMER_UNARCHIVE", "CUSTOMER", customerId.toString(), null,
+                "archived=false", true, "Customer unarchived");
     }
 
     @Transactional
@@ -228,6 +248,7 @@ public class CustomerService {
         enforceCustomerSelfAccess(customerId);
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        enforceEmployeeCustomerAccess(customer);
 
         CustomerDocument document = new CustomerDocument();
         document.setCustomer(customer);
@@ -241,8 +262,12 @@ public class CustomerService {
                 null, request.getDocumentType().name(), true, "Customer document metadata uploaded");
     }
 
+    @Transactional(readOnly = true)
     public List<CustomerDocument> getDocuments(Long customerId) {
         enforceCustomerSelfAccess(customerId);
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        enforceEmployeeCustomerAccess(customer);
         return customerDocumentRepository.findByCustomerId(customerId);
     }
 
@@ -254,6 +279,14 @@ public class CustomerService {
                                                  AccountStatus accountStatus,
                                                  int page,
                                                  int size) {
+        boolean isAdmin = SecurityUtils.hasRole("ROLE_ADMIN") || SecurityUtils.hasRole("ROLE_AUDITOR");
+        if (!isAdmin) {
+            Long userId = SecurityUtils.currentUserId();
+            branchId = employeeRepository.findByUserId(userId)
+                    .map(emp -> emp.getBranch().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee profile not found"));
+        }
+
         var pageable = PageRequest.of(page, size);
         return PageMapper.from(
                 customerRepository.search(branchId, kycStatus, status, riskProfile, accountStatus, pageable)
@@ -287,6 +320,21 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer profile not found"));
         if (!me.getId().equals(customerId)) {
             throw new ForbiddenOperationException("Customers can only access their own profile");
+        }
+    }
+
+    private void enforceEmployeeCustomerAccess(Customer customer) {
+        if (SecurityUtils.hasRole("ROLE_ADMIN") || SecurityUtils.hasRole("ROLE_AUDITOR")) {
+            return;
+        }
+        if (SecurityUtils.hasRole("ROLE_MANAGER") || SecurityUtils.hasRole("ROLE_EMPLOYEE")) {
+            Long userId = SecurityUtils.currentUserId();
+            Long empBranchId = employeeRepository.findByUserId(userId)
+                    .map(emp -> emp.getBranch().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee profile not found"));
+            if (!empBranchId.equals(customer.getBranch().getId())) {
+                throw new ForbiddenOperationException("Cannot access customer from a different branch");
+            }
         }
     }
 }

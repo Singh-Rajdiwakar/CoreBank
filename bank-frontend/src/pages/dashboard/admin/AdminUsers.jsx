@@ -112,6 +112,20 @@ const AdminUsers = () => {
     }
   };
 
+  const handleUnarchiveCustomer = async (customer) => {
+    if (!window.confirm(`Are you sure you want to reactivate ${customer.name || customer.fullName || 'this customer'}?`)) return;
+    setIsUpdating(true);
+    try {
+      await adminAPI.unarchiveCustomer(customer.id);
+      showNotification('Customer reactivated successfully', 'success');
+      fetchCustomers();
+    } catch (err) {
+      showNotification('Failed to reactivate customer.', 'error');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   const confirmBlockCustomer = async (e) => {
     e.preventDefault();
     if (!blockRemarks.trim()) {
@@ -292,15 +306,26 @@ const AdminUsers = () => {
                                 <line x1="8" y1="12" x2="16" y2="12"></line>
                               </svg>
                             </button>
-                          {/* Archive Button */}
-                          <button
-                            title="Globally Archive Customer"
-                            disabled={isUpdating}
-                            onClick={() => handleArchiveCustomer(customer)}
-                            className="p-2 text-gray-400 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
-                          </button>
+                          {/* Archive/Unarchive Button */}
+                          {customer.status === 'ARCHIVED' ? (
+                            <button
+                              title="Reactivate Customer"
+                              disabled={isUpdating}
+                              onClick={() => handleUnarchiveCustomer(customer)}
+                              className="p-2 text-gray-400 hover:text-green-700 hover:bg-green-50 rounded-full transition-colors disabled:opacity-50"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </button>
+                          ) : (
+                            <button
+                              title="Globally Archive Customer"
+                              disabled={isUpdating}
+                              onClick={() => handleArchiveCustomer(customer)}
+                              className="p-2 text-gray-400 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))
