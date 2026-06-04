@@ -10,12 +10,16 @@ const api = axios.create({
   },
 });
 
-// Request interceptor - attach JWT token
+// Request interceptor - attach JWT token and Idempotency key
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('bank_token') || localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Automatically add Idempotency-Key for POST/PATCH transfer endpoints
+    if (config.method === 'post' || config.method === 'patch') {
+      config.headers['Idempotency-Key'] = crypto.randomUUID();
     }
     return config;
   },

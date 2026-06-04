@@ -165,7 +165,7 @@ const ForgotPasswordPage = () => {
                       autoFocus
                     />
                   </div>
-                  <button type="submit" disabled={loading || otp.length < 4} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-colors disabled:opacity-70 flex justify-center items-center h-12">
+                  <button type="submit" disabled={loading || otp.length < 6} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-colors disabled:opacity-70 flex justify-center items-center h-12">
                     {loading ? <span className="animate-spin text-xl">⏳</span> : 'Verify Code'}
                   </button>
                   <div className="text-center mt-4">

@@ -111,6 +111,7 @@ const FundTransfer = () => {
           res = await transferAPI.upiTransfer({
              sourceAccountNumber: selectedSourceAccount,
              upiId: formData.upiId,
+             transferMode: 'UPI',
              amount: parseFloat(formData.amount),
              remarks: formData.remarks || 'UPI Transfer',
              transactionPin: pin,
@@ -119,6 +120,7 @@ const FundTransfer = () => {
           res = await transferAPI.scheduledTransfer({
              sourceAccountNumber: selectedSourceAccount,
              destinationAccountNumber: formData.destinationAccountNumber,
+             transferMode: 'SCHEDULED',
              amount: parseFloat(formData.amount),
              scheduledDate: formData.scheduledDate,
              remarks: formData.remarks || 'Scheduled Transfer',
@@ -128,6 +130,7 @@ const FundTransfer = () => {
           res = await transferAPI.recurringTransfer({
              sourceAccountNumber: selectedSourceAccount,
              destinationAccountNumber: formData.destinationAccountNumber,
+             transferMode: 'RECURRING',
              amount: parseFloat(formData.amount),
              startDate: formData.startDate,
              endDate: formData.endDate,
@@ -140,6 +143,7 @@ const FundTransfer = () => {
             sourceAccountNumber: selectedSourceAccount,
             destinationAccountNumber: formData.destinationAccountNumber,
             amount: parseFloat(formData.amount),
+            transferMode: transferMode,
             remarks: formData.remarks || `${transferMode} Transfer`,
             transactionPin: pin,
           };
@@ -159,7 +163,10 @@ const FundTransfer = () => {
       refreshAccounts();
     } catch (error) {
       console.error('Transfer failed:', error);
-      const errMsg = error.response?.data?.message || 'Transfer failed. Please try again.';
+      let errMsg = error.response?.data?.message || 'Transfer failed. Please try again.';
+      if (error.response?.data?.error === 'VALIDATION_FAILED' && Array.isArray(error.response?.data?.details)) {
+        errMsg = error.response.data.details.join(', ');
+      }
       showNotification(errMsg, 'error');
     } finally {
       setIsTransferring(false);
@@ -290,7 +297,7 @@ const FundTransfer = () => {
                 id="destinationAccountNumber"
                 name="destinationAccountNumber"
                 label="Recipient Account Number"
-                placeholder="Enter Account Number"
+                placeholder=""
                 value={formData.destinationAccountNumber}
                 onChange={handleInputChange}
               />
@@ -301,7 +308,7 @@ const FundTransfer = () => {
               name="amount"
               type="number"
               label="Amount (₹)"
-              placeholder="0.00"
+              placeholder=""
               value={formData.amount}
               onChange={handleInputChange}
             />
@@ -356,7 +363,7 @@ const FundTransfer = () => {
               id="remarks"
               name="remarks"
               label="Remarks (Optional)"
-              placeholder="What's this for?"
+              placeholder=""
               value={formData.remarks}
               onChange={handleInputChange}
             />

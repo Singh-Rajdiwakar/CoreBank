@@ -236,7 +236,7 @@ const RegisterPage = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="10-digit number"
+                placeholder=""
                 disabled={loading}
               />
             </div>

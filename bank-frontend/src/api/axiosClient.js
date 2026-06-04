@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create Axios instance with baseURL
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -52,7 +52,7 @@ axiosClient.interceptors.response.use(
 
     // Handle connection errors
     if (!error.response) {
-      console.error('Network error - Backend might not be running on http://localhost:8080/api');
+      console.error('Network error - Backend might not be running');
     }
 
     return Promise.reject(error);

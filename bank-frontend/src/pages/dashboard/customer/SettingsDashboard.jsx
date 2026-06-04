@@ -64,8 +64,8 @@ const SettingsDashboard = () => {
 
   const handlePinChange = async (e) => {
     e.preventDefault();
-    if (!/^\d{4}$/.test(pinForm.transactionPin)) {
-      return showNotification('PIN must be exactly 4 digits.', 'error');
+    if (!/^\d{6}$/.test(pinForm.transactionPin)) {
+      return showNotification('PIN must be exactly 6 digits.', 'error');
     }
     if (pinForm.transactionPin !== pinForm.confirmPin) {
       return showNotification('PINs do not match.', 'error');
@@ -291,20 +291,20 @@ const SettingsDashboard = () => {
                    {/* Transaction PIN Form */}
                    <section>
                       <h3 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-4 mb-6">Transaction PIN</h3>
-                      <p className="text-sm text-gray-500 mb-6">Create or reset your 4-digit PIN used for authorizing funds transfers and payments.</p>
+                      <p className="text-sm text-gray-500 mb-6">Create or reset your 6-digit PIN used for authorizing funds transfers and payments.</p>
                       <form onSubmit={handlePinChange} className="space-y-4 max-w-md">
                          <div className="flex gap-4">
                             <div className="flex-1">
-                              <label className="block text-sm font-semibold text-gray-700 mb-1">4-Digit PIN</label>
+                              <label className="block text-sm font-semibold text-gray-700 mb-1">6-Digit PIN</label>
                               <input 
-                                type="password" maxLength={4} placeholder="••••" value={pinForm.transactionPin} onChange={e => setPinForm({...pinForm, transactionPin: e.target.value.replace(/\D/g, '')})}
+                                type="password" maxLength={6} placeholder="••••••" value={pinForm.transactionPin} onChange={e => setPinForm({...pinForm, transactionPin: e.target.value.replace(/\D/g, '')})}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                               />
                             </div>
                             <div className="flex-1">
                               <label className="block text-sm font-semibold text-gray-700 mb-1">Confirm PIN</label>
                               <input 
-                                type="password" maxLength={4} placeholder="••••" value={pinForm.confirmPin} onChange={e => setPinForm({...pinForm, confirmPin: e.target.value.replace(/\D/g, '')})}
+                                type="password" maxLength={6} placeholder="••••••" value={pinForm.confirmPin} onChange={e => setPinForm({...pinForm, confirmPin: e.target.value.replace(/\D/g, '')})}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-gray-300" required
                               />
                             </div>

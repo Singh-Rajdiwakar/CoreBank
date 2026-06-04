@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { Shield, Zap, CreditCard, BarChart2, Lock, Bell } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -22,29 +23,24 @@ const LandingPage = () => {
     });
 
     // 2. Hero Section Entrance
-    const tl = gsap.timeline();
-    tl.from('.hero-badge', { opacity: 0, y: -20, duration: 0.6, ease: 'back.out(1.5)' })
-      .from('.hero-title-line', { opacity: 0, y: 50, duration: 0.8, stagger: 0.15, ease: 'power4.out' }, '-=0.2')
-      .from('.hero-subtitle', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
-      .from('.hero-btn', { opacity: 0, scale: 0.9, duration: 0.4, ease: 'back.out(1.5)' }, '-=0.2')
-      .from('.float-card', { opacity: 0, x: 50, rotationY: 15, duration: 1, stagger: 0.2, ease: 'power3.out' }, '-=0.8');
-
-    // 3. Floating 3D Cards continuous motion
-    gsap.to('.float-card-1', { y: -20, duration: 2.3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-    gsap.to('.float-card-2', { y: 20, duration: 2.8, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 });
-    gsap.to('.float-card-3', { y: -15, duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1 });
+    // const tl = gsap.timeline();
+    // tl.from('.hero-badge', { opacity: 0, y: -20, duration: 0.6, ease: 'back.out(1.5)' })
+    //   .from('.hero-title-line', { opacity: 0, y: 50, duration: 0.8, stagger: 0.15, ease: 'power4.out' }, '-=0.2')
+    //   .from('.hero-subtitle', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
+    //   .from('.hero-btn', { opacity: 0, scale: 0.9, duration: 0.4, ease: 'back.out(1.5)' }, '-=0.2')
+    //   .from('.float-card', { opacity: 0, x: 50, duration: 1, ease: 'power3.out' }, '-=0.8');
 
     // 4. Staggered Stats Entrance
-    gsap.from('.stat-box', {
-      scrollTrigger: { trigger: '.stats-grid', start: 'top 80%' },
-      scale: 0.8, opacity: 0, duration: 0.6, stagger: 0.15, ease: 'back.out(1.5)'
-    });
+    // gsap.from('.stat-box', {
+    //   scrollTrigger: { trigger: '.stats-grid', start: 'top 80%' },
+    //   scale: 0.8, opacity: 0, duration: 0.6, stagger: 0.15, ease: 'back.out(1.5)'
+    // });
 
     // 5. Staggered Features Entrance
-    gsap.from('.feature-card', {
-      scrollTrigger: { trigger: '.features-grid', start: 'top 75%' },
-      y: 60, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out'
-    });
+    // gsap.from('.feature-card', {
+    //   scrollTrigger: { trigger: '.features-grid', start: 'top 75%' },
+    //   y: 60, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out'
+    // });
 
   }, { scope: containerRef });
 
@@ -97,50 +93,96 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Isometric 3D Visuals */}
-          <div className="relative h-[600px] hidden lg:block perspective-[1200px]">
+          {/* Hero Visuals */}
+          <div className="relative h-[600px] hidden lg:block w-full">
             
-            {/* Front Card */}
-            <div className="float-card float-card-1 absolute top-[10%] right-[10%] w-80 h-52 bg-slate-900/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/10 shadow-2xl flex flex-col justify-between z-30 transform -rotate-12 hover:rotate-0 transition-transform duration-700">
-              <div className="flex justify-between items-center">
-                <div className="w-12 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded opacity-90" />
-                <div className="text-slate-500 font-bold tracking-widest">NEXPAY</div>
-              </div>
-              <div className="text-2xl tracking-[0.25em] font-mono text-slate-300">•••• •••• •••• 4092</div>
-              <div className="flex justify-between text-sm text-slate-400 uppercase tracking-widest">
-                <span>Raj Singh</span>
-                <span>12/28</span>
-              </div>
-            </div>
+            {/* Soft Radial Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#3B6FE8]/15 blur-[80px] rounded-full pointer-events-none" />
             
-            {/* Back App Dashboard Card */}
-            <div className="float-card float-card-2 absolute bottom-[15%] left-[5%] w-72 bg-slate-900/80 backdrop-blur-xl rounded-3xl p-6 border border-white/5 shadow-2xl z-20">
-              <div className="text-sm text-slate-400 mb-2 font-medium">Total Balance</div>
-              <div className="text-3xl font-black text-white mb-6 tracking-tight">₹ 4,52,000.00</div>
-              <div className="space-y-4">
-                <div className="h-14 bg-slate-800/50 rounded-xl flex items-center px-4 gap-4 border border-white/5">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">↓</div>
-                  <div className="flex-1">
-                     <div className="flex justify-between mb-1"><div className="h-2.5 w-16 bg-slate-600 rounded" /><div className="h-2.5 w-12 bg-emerald-500/80 rounded" /></div>
-                     <div className="h-1.5 w-24 bg-slate-700 rounded" />
-                  </div>
-                </div>
-                <div className="h-14 bg-slate-800/50 rounded-xl flex items-center px-4 gap-4 border border-white/5">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">↑</div>
-                  <div className="flex-1">
-                     <div className="flex justify-between mb-1"><div className="h-2.5 w-20 bg-slate-600 rounded" /><div className="h-2.5 w-10 bg-slate-500 rounded" /></div>
-                     <div className="h-1.5 w-16 bg-slate-700 rounded" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="relative w-full h-full flex items-center justify-center">
 
-            {/* Accent Orb/Badge */}
-            <div className="float-card float-card-3 absolute top-[35%] left-[0%] w-36 h-36 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-5 border border-white/20 shadow-[0_0_50px_-10px_rgba(99,102,241,0.5)] z-40 flex flex-col justify-center items-center text-white rotate-12">
-              <div className="text-4xl mb-2 drop-shadow-xl">✨</div>
-              <div className="font-bold text-center text-sm uppercase tracking-wider">Zero Fees</div>
+              {/* Device Frame */}
+              <div className="w-[520px] bg-[#1A1F35] rounded-2xl p-2 shadow-[0_0_60px_rgba(59,111,232,0.3)] z-30 transform hover:scale-[1.02] transition-transform duration-500 float-card">
+                
+                {/* Browser/Device Header */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+                  <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-400/80" />
+                </div>
+                
+                {/* Dashboard UI */}
+                <div className="bg-[#0D1226] rounded-xl overflow-hidden h-[420px] flex flex-col">
+                  
+                  {/* Top Bar */}
+                  <div className="flex justify-between items-center px-6 py-4 border-b border-white/5">
+                    <div className="font-bold text-white flex items-center gap-2">
+                       <span className="w-6 h-6 rounded bg-[#3B6FE8] flex items-center justify-center text-xs">N</span>
+                       NexPay
+                    </div>
+                    <div className="flex items-center gap-3">
+                       <span className="text-xs text-[#8A9BB5]">Welcome back, Raj</span>
+                       <div className="w-8 h-8 rounded-full bg-slate-700 border border-white/10 flex items-center justify-center text-xs text-white font-medium">RS</div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 flex-1 flex flex-col gap-5">
+                    
+                    {/* Balance Card */}
+                    <div className="bg-gradient-to-br from-[#3B6FE8] to-indigo-700 rounded-xl p-5 shadow-lg relative overflow-hidden">
+                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl -translate-y-1/2 translate-x-1/2" />
+                       <div className="text-xs text-white/80 font-medium mb-1 tracking-wide">Total Balance</div>
+                       <div className="text-2xl font-black text-white">₹ 4,52,000.00</div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="grid grid-cols-2 gap-4">
+                       <div className="bg-[#1A1F35] rounded-xl p-3 flex items-center justify-center gap-2 border border-white/5 text-sm text-white font-medium hover:bg-white/5 cursor-pointer transition-colors shadow-sm">
+                          <span className="text-[#3B6FE8]">↗</span> Transfer
+                       </div>
+                       <div className="bg-[#1A1F35] rounded-xl p-3 flex items-center justify-center gap-2 border border-white/5 text-sm text-white font-medium hover:bg-white/5 cursor-pointer transition-colors shadow-sm">
+                          <span className="text-purple-400">📄</span> Pay EMI
+                       </div>
+                    </div>
+
+                    <div className="flex gap-4 flex-1">
+                      {/* Transactions List */}
+                      <div className="flex-[3] bg-[#1A1F35] rounded-xl p-4 border border-white/5 flex flex-col justify-between">
+                        <div className="text-[10px] font-bold text-[#8A9BB5] uppercase tracking-wider mb-2">Recent Activity</div>
+                        {[
+                          { label: 'Netflix', time: 'Today', amount: '-₹649', color: 'text-red-400', icon: '🎬' },
+                          { label: 'Salary', time: 'Yesterday', amount: '+₹1.2L', color: 'text-green-400', icon: '💰' },
+                          { label: 'Amazon', time: 'May 10', amount: '-₹999', color: 'text-red-400', icon: '🛒' },
+                        ].map((tx, idx) => (
+                           <div key={idx} className="flex justify-between items-center">
+                             <div className="flex items-center gap-2">
+                               <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-xs">{tx.icon}</div>
+                               <div>
+                                  <div className="text-xs font-semibold text-white">{tx.label}</div>
+                                  <div className="text-[9px] text-[#8A9BB5]">{tx.time}</div>
+                               </div>
+                             </div>
+                             <div className={`text-xs font-bold ${tx.color}`}>{tx.amount}</div>
+                           </div>
+                        ))}
+                      </div>
+
+                      {/* Mini Chart Area */}
+                      <div className="flex-[2] bg-[#1A1F35] rounded-xl p-4 border border-white/5 flex flex-col">
+                         <div className="text-[10px] font-bold text-[#8A9BB5] uppercase tracking-wider mb-2">Flow</div>
+                         <div className="flex-1 w-full flex items-end gap-1.5 pt-2">
+                            {[40, 70, 45, 90, 60, 100].map((h, i) => (
+                               <div key={i} className="flex-1 bg-gradient-to-t from-[#3B6FE8]/20 to-[#3B6FE8] rounded-t-sm transition-all duration-500 hover:opacity-80" style={{ height: `${h}%` }} />
+                            ))}
+                         </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
             </div>
-            
           </div>
         </div>
       </section>
@@ -168,29 +210,32 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-32 px-6 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-black mb-6 text-white tracking-tight">Why Choose NexPay?</h2>
-            <p className="text-xl text-slate-400 font-light leading-relaxed">Experience banking the way it should be — securely engineered, lightning fast, and seamlessly integrated into your lifestyle.</p>
-          </div>
+      <section className="py-[80px] px-6 relative z-10 w-full max-w-[1100px] mx-auto">
+        <div className="text-center mb-20 max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black mb-6 text-white tracking-tight">Why Choose NexPay?</h2>
+          <p className="text-xl text-slate-400 font-light leading-relaxed">Experience banking the way it should be — securely engineered, lightning fast, and seamlessly integrated into your lifestyle.</p>
+        </div>
 
-          <div className="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: '⚡', title: 'Lightning Fast', desc: 'Settle transfers in seconds globally, driven by our optimized network backbone.' },
-              { icon: '🧠', title: 'AI Security', desc: 'Predictive machine learning algorithms actively detect and halt fraud 24/7.' },
-              { icon: '💎', title: 'Zero Hidden Fees', desc: 'We value transparency. Say goodbye to maintenance fees and hidden charges.' },
-              { icon: '🌍', title: 'Global Reach', desc: 'Send and receive major currencies instantly with industry-leading exchange rates.' },
-              { icon: '📱', title: 'Mobile First', desc: 'Manage finances entirely on the go via our meticulously crafted UX/UI.' },
-              { icon: '🎧', title: '24/7 Support', desc: 'Priority human support anytime you need, completely eliminating wait times.' },
-            ].map((f, i) => (
-              <div key={i} className="feature-card group bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-blue-500/30 p-10 rounded-[2rem] transition-all duration-500 hover:shadow-[0_0_40px_-20px_rgba(59,130,246,0.3)]">
-                <div className="w-16 h-16 rounded-2xl bg-white/[0.05] border border-white/5 flex items-center justify-center text-3xl mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">{f.icon}</div>
-                <h3 className="text-2xl font-bold mb-4 text-white">{f.title}</h3>
-                <p className="text-slate-400 leading-relaxed font-light">{f.desc}</p>
+        <div className="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { icon: Shield, title: 'Bank-Grade Security', desc: 'Secure 256-bit encryption and real-time fraud detection on every transaction.' },
+            { icon: Zap, title: 'Instant Transfers', desc: 'Send money anywhere in seconds with zero processing delays.' },
+            { icon: CreditCard, title: 'Zero Fee Banking', desc: 'No hidden charges, no maintenance fees. Keep every rupee you earn.' },
+            { icon: BarChart2, title: 'Smart Analytics', desc: 'Track spending patterns and get AI-powered financial insights.' },
+            { icon: Lock, title: 'Secure Loans', desc: 'Apply for instant loans with transparent EMI schedules and no surprises.' },
+            { icon: Bell, title: 'Instant Alerts', desc: 'Real-time SMS and email notifications for every account activity.' },
+          ].map((f, i) => {
+            const IconComponent = f.icon;
+            return (
+              <div key={i} className="feature-card group bg-[#0D1226] border border-[#1E2A45] border-t-[3px] border-t-[#3B6FE8] p-[28px] rounded-xl transition-all duration-300 hover:shadow-[0_0_24px_rgba(59,111,232,0.2)] hover:-translate-y-1">
+                <div className="mb-5">
+                  <IconComponent size={28} color="#3B6FE8" />
+                </div>
+                <h3 className="text-[18px] font-[600] mb-3 text-white">{f.title}</h3>
+                <p className="text-[#8A9BB5] text-[14px] leading-relaxed">{f.desc}</p>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </section>
 

@@ -189,8 +189,8 @@ const CardManagement = () => {
     e.preventDefault();
     if (cards.length === 0) return;
     const currentCard = cards[activeCardIndex];
-    if (pinValue.length !== 4) {
-      showNotification('PIN must be 4 digits', 'error');
+    if (pinValue.length !== 6) {
+      showNotification('PIN must be 6 digits', 'error');
       return;
     }
     setIsUpdating(true);
@@ -499,16 +499,16 @@ const CardManagement = () => {
             <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
               <h3 className="text-xl font-bold text-center text-gray-900 mb-2 mt-2">Set / Change PIN</h3>
               <p className="text-gray-500 text-center text-sm mb-6">
-                Enter your new 4-digit numeric PIN for card ending in {String(activeCard?.cardNumber || '').slice(-4)}.
+                Enter your new 6-digit numeric PIN for card ending in {String(activeCard?.cardNumber || '').slice(-4)}.
               </p>
               <form onSubmit={handleSetPin}>
                 <input
                   type="password"
-                  maxLength={4}
+                  maxLength={6}
                   value={pinValue}
                   onChange={(e) => setPinValue(e.target.value.replace(/\D/g, ''))}
                   className="w-full text-center text-2xl tracking-widest py-3 mb-6 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="••••"
+                  placeholder="••••••"
                   autoFocus
                 />
                 <div className="flex space-x-3">
@@ -521,7 +521,7 @@ const CardManagement = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={isUpdating || pinValue.length !== 4}
+                    disabled={isUpdating || pinValue.length !== 6}
                     className="flex-1 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                   >
                     Confirm

@@ -7,8 +7,8 @@ const TransactionPinModal = ({ onClose, onSubmit, amount, recipient }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (pin.length < 4) {
-      setError('PIN must be at least 4 digits');
+    if (pin.length < 6) {
+      setError('PIN must be at least 6 digits');
       return;
     }
     onSubmit(pin);
@@ -51,12 +51,12 @@ const TransactionPinModal = ({ onClose, onSubmit, amount, recipient }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
-                Enter your 4-digit Transaction PIN
+                Enter your 6-digit Transaction PIN
               </label>
               <div className="flex justify-center">
                 <input
                   type="password"
-                  maxLength="4"
+                  maxLength="6"
                   value={pin}
                   onChange={(e) => {
                     setPin(e.target.value.replace(/\D/g, ''));
